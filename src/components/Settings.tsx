@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import PrimaryButton from './PrimaryButton';
 
 function Settings() {
   const navigate = useNavigate();
@@ -15,9 +16,9 @@ function Settings() {
           top: '50%', left: '50%', 
           msTransform: 'translate(-50%, -50%)', 
           transform: 'translate(-50%, -50%)' }}>
-          <button onClick={handleNewClick}>
+          <PrimaryButton onClick={handleNewClick}>
             Create
-          </button>
+          </PrimaryButton>
         </div>
       </header>
     </div>
