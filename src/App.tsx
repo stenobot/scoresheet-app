@@ -38,11 +38,19 @@ function App() {
               showColTotals={showColTotals}
               setShowColTotals={setShowColTotals}
               presets={presets}
-              setCurrPreset={setCurrPreset} />} />
+              setCurrPreset={setCurrPreset} />
+            } />
         <Route 
           path="/scoresheet" 
           element={
-            <Scoresheet />} />
+            <Scoresheet 
+              title={title} 
+              colNum={colNum}
+              showRowNums={showRowNums}
+              startingRowNum={startingRowNum}
+              showColTotals={showColTotals}
+              currPreset={currPreset} />
+            } />
       </Routes>
     </Router>
   );
