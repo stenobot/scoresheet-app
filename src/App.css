@@ -1,16 +1,7 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  background-color: #282c34;
+  color: white;
 }
 
 .App-header {
@@ -28,11 +19,125 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.titleWithRowNums {
+  margin-left: 0.5em;
+  color: #e4e4e4;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.titleNoRowNums {
+  color: #e4e4e4;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.tableNoRowNums {
+  border-collapse: collapse;
+  min-width: 20vh;
+}
+
+.tableWithRowNums {
+  border-collapse: collapse;
+  margin-right: 0.7em;
+  min-width: 20vh;
+}
+
+td {
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+}
+
+td:before {
+  content: '';
+  display: block; 
+}
+
+.normalCell {
+  border: 1px solid #393e46;
+  color: #e4e4e4;
+}
+
+.normalCellBadInput {
+  border: 1px solid #393e46;
+  color: #7b4949;
+}
+
+.numLabelCell {
+  color: #70aacb;
+  text-align: right;
+  padding-right: 0.6em;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.numLabelCellHeader:before {
+  width: 1.2em;
+}
+
+.normalCellHeader:before {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  content: '';
+  display: block;
+  width: 4em;
+}
+
+.normalCellHeader {
+  height: 1.8em;
+  color: #70aacb;
+  text-transform: uppercase;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.normalCellFooter {
+  height: 1.8em;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  color: #e4e4e4;
+  text-transform: uppercase;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+label {
+  font-size: 0.8em;
+}
+
+input {
+  font-size: 0.8em;
+  padding: 0.3em;
+  margin-left: 0.5em;
+  height: 1.3em;
+  vertical-align: middle;
+}
+
+.checkbox-input {
+  width: 1.8em;
+}
+
+.dropdown-select {
+  font-size: 0.8em;
+  margin-right: 0.7em;
+  height: 1.8em;
+  width: 3em;
+  vertical-align: middle;
+}
+
+.dropdown-select-presets {
+  font-size: 0.8em;
+  margin-left: 0.7em;
+  height: 1.8em;
+  width: 10em;
+  vertical-align: middle;
 }
