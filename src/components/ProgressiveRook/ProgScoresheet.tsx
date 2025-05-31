@@ -4,15 +4,20 @@ import { useGameContext, gameTypes } from '../../contexts/GameContext';
 import { useProgContext } from '../../contexts/ProgContext';
 
 function ProgScoresheet() { 
-  const { gameType, title, currRound, setCurrRound } = useGameContext();
   const { 
-    colNum, 
+    gameType, 
+    title, 
+    currRound, 
+    setCurrRound, 
+    players, 
+    setPlayers } = useGameContext();
+  const { 
     showRowNums, 
     startingRowNum, 
     showColTotals } = useProgContext();
 
   // initial column totals values to set below arrays
-  const initialColTotals = Array.from(Array(colNum).keys()).map( () => 0);
+  const initialColTotals = Array.from(players.keys()).map( () => 0);
   // create 2d array for all cell values, 
   // as a source of truth when we column totals
   const [rowsValues, setRowsValues] = useState([initialColTotals]);
@@ -93,6 +98,7 @@ function ProgScoresheet() {
     if (target.tagName === 'TD') {
       const parent = target.parentElement as HTMLElement;
       parent.remove();
+      setCurrRound(currRound - 1);
     }
   }
 
@@ -103,7 +109,7 @@ function ProgScoresheet() {
     console.log(`addTableRow start - rowsValues.length: ${rowsValues.length}`);
     const tBody = document.getElementById('tbody');
     const trBody = document.createElement('tr');
-    for (let i = 0; i < colNum + 1; i++) {
+    for (let i = 0; i < players.length + 1; i++) {
       if (i === 0) {
         // add row number label first, if option selected
         if (showRowNums) {
@@ -233,10 +239,10 @@ function ProgScoresheet() {
           <thead style={{ padding: '5px' }}>
             <tr id="theadtrow">
               { showRowNums === false ? 
-                  Array.from(Array(colNum).keys()).map( i => 
+                  Array.from(players.keys()).map( i => 
                     <th contentEditable suppressContentEditableWarning={true} key={i} className='normalCellHeader'>P{i + 1}</th>
                   ) : 
-                  Array.from(Array(colNum + 1).keys()).map( i => {
+                  Array.from(Array(players.length + 1).keys()).map( i => {
                     return i === 0 ?
                       <th className='numLabelCellHeader' key={i}></th>
                       : <th className='normalCellHeader' contentEditable  suppressContentEditableWarning={true} key={i}>P{i}</th>}

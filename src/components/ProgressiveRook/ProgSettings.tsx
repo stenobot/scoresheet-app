@@ -5,10 +5,8 @@ import { gameTypes, useGameContext } from '../../contexts/GameContext';
 import { useProgContext } from '../../contexts/ProgContext';
 
 function ProgSettings() {
-  const { gameType, title } = useGameContext();
+  const { gameType, title,players, setPlayers } = useGameContext();
   const { 
-    colNum, 
-    setColNum, 
     showRowNums, 
     setShowRowNums, 
     startingRowNum, 
@@ -23,9 +21,16 @@ function ProgSettings() {
     console.log("url changed")
   }, [location]);
 
-  const handleNextClick = () => {
-    console.log(`colTotal: ${colNum}`);
+  const handlePlayersChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedPlayers = Number(e.target.value);
+    const playersArray = Array.from({ length: selectedPlayers }, (_, i) => `P${i + 1}`);
+    setPlayers(playersArray);
+  };
 
+  const handleStartClick = () => {
+    console.log(`players: ${players}`);
+
+    // Workaround to set starting row for Simple Scoresheet
     if (gameType === gameTypes[0]) {
       setStartingRowNum(1);
     }
@@ -52,8 +57,8 @@ function ProgSettings() {
             <label>
               <select 
                 className='dropdown-select'
-                value={colNum}
-                onChange={e => setColNum(Number(e.target.value))}>
+                value={players.length}
+                onChange={handlePlayersChange}>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -104,8 +109,8 @@ function ProgSettings() {
             </div>
           }
           <div style={{ marginTop: '20px' }}>
-            <PrimaryButton onClick={handleNextClick}>
-              Next
+            <PrimaryButton onClick={handleStartClick}>
+              Start Game
             </PrimaryButton>
           </div>
         </div>

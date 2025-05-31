@@ -14,13 +14,16 @@ const GameContext = createContext({
     title: '',
     setTitle: (title: string) => {},
     currRound: 0,
-    setCurrRound: (currRound: number) => {}
+    setCurrRound: (currRound: number) => {},
+    players: [] as string[],
+    setPlayers: (players: string[]) => {}
 });
 
 const GameContextProvider = (props: PropsWithChildren<{}>) => {
     const [title, setTitle] = useState('Game 1');
     const [gameType, setGameType] = useState<GameType>(GameType.ProgressiveRook); // Default to Progressive Rook
     const [currRound, setCurrRound] = useState(1);
+    const [players, setPlayers] = useState<string[]>([]);
     return (
         <GameContext.Provider value={{
             gameType,
@@ -28,7 +31,9 @@ const GameContextProvider = (props: PropsWithChildren<{}>) => {
             title,
             setTitle,
             currRound,
-            setCurrRound
+            setCurrRound,
+            players,
+            setPlayers
         }}>
             {props.children}
         </GameContext.Provider>
