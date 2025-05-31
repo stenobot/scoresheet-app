@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from './PrimaryButton';
 import { Preset } from '../App';
+import { useGameContext } from '../contexts/GameContext';
 
 function Scoresheet(props: { 
-  title: string; 
   colNum: number;
   showRowNums: boolean;
   startingRowNum: number;
@@ -22,6 +22,7 @@ function Scoresheet(props: {
     props.showRowNums ? ["", ...initialColTotals] : initialColTotals
   );
 
+  const { title } = useGameContext();
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
   const rowNumDoubleTwelveRuleAppliedRef = useRef(false);
@@ -224,7 +225,7 @@ function Scoresheet(props: {
         <table
           className={ props.showRowNums ? 'tableWithRowNums' : 'tableNoRowNums' }>
           <caption>
-            <h2 className={ props.showRowNums ? 'titleWithRowNums' : 'titleNoRowNums' }>{props.title}</h2>
+            <h2 className={ props.showRowNums ? 'titleWithRowNums' : 'titleNoRowNums' }>{title}</h2>
           </caption>
           <thead style={{ padding: '5px' }}>
             <tr id="theadtrow">

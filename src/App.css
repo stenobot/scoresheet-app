@@ -141,3 +141,16 @@ input {
   width: 10em;
   vertical-align: middle;
 }
+
+.dropdown-select-game-type {
+  font-size: 0.9em;
+  height: 2.6em;
+  width: 12em;
+  padding-left: 1em;
+  vertical-align: middle;
+  background-color: #85d8ff;
+  border-radius: 0.3em;
+  border: #003B3D;
+  color: #003B3D;
+  box-shadow: 0px 2px 2px #003B3D;
+}

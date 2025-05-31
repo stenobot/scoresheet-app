@@ -4,52 +4,54 @@ import './App.css';
 import Scoresheet from './components/Scoresheet';
 import Start from './components/Start';
 import Settings from './components/Settings';
+import GameContextProvider from './contexts/GameContext';
 
 export enum Preset {
   None = 'none',
-  ProgressiveRook = 'Progressive Rook'
+  ProgressiveRook = 'Progressive Rook',
+  Mahjong = 'Mahjong (1960s)'
 }
 
 function App() {
-  const [title, setTitle] = useState('Game 1'); 
   const [colNum, setColNum] = useState(2);
   const [showRowNums, setShowRowNums] = useState(false);
   const [startingRowNum, setStartingRowNum] = useState(1);
   const [showColTotals, setShowColTotals] = useState(false);
-  const [presets] = useState([Preset.None, Preset.ProgressiveRook]);
+  const [presets] = useState([Preset.None, Preset.ProgressiveRook, Preset.Mahjong]);
   const [currPreset, setCurrPreset] = useState(Preset.None);
 
   return (
-        <Router>
+    <Router>
       <Routes>
         <Route path="/" element={<Start />} />
         <Route 
           path="/settings" 
           element={
-            <Settings 
-              title={title}
-              setTitle={setTitle} 
-              colNum={colNum}
-              setColNum={setColNum}
-              showRowNums={showRowNums}
-              setShowRowNums={setShowRowNums}
-              startingRowNum={startingRowNum}
-              setStartingRowNum={setStartingRowNum}
-              showColTotals={showColTotals}
-              setShowColTotals={setShowColTotals}
-              presets={presets}
-              setCurrPreset={setCurrPreset} />
+            <GameContextProvider>      
+              <Settings 
+                colNum={colNum}
+                setColNum={setColNum}
+                showRowNums={showRowNums}
+                setShowRowNums={setShowRowNums}
+                startingRowNum={startingRowNum}
+                setStartingRowNum={setStartingRowNum}
+                showColTotals={showColTotals}
+                setShowColTotals={setShowColTotals}
+                presets={presets}
+                setCurrPreset={setCurrPreset} />
+              </GameContextProvider>
             } />
         <Route 
           path="/scoresheet" 
           element={
-            <Scoresheet 
-              title={title} 
-              colNum={colNum}
-              showRowNums={showRowNums}
-              startingRowNum={startingRowNum}
-              showColTotals={showColTotals}
-              currPreset={currPreset} />
+            <GameContextProvider>
+              <Scoresheet 
+                colNum={colNum}
+                showRowNums={showRowNums}
+                startingRowNum={startingRowNum}
+                showColTotals={showColTotals}
+                currPreset={currPreset} />
+              </GameContextProvider>
             } />
       </Routes>
     </Router>

@@ -2,10 +2,9 @@ import { Dispatch, SetStateAction, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PrimaryButton from './PrimaryButton';
 import { Preset } from '../App';
+import { useGameContext } from '../contexts/GameContext';
 
-function Settings(props: { 
-  title: string;
-  setTitle: Dispatch<SetStateAction<string>>, 
+function Settings(props: {
   colNum: number,
   setColNum: Dispatch<SetStateAction<number>>,
   showRowNums: boolean, 
@@ -16,6 +15,9 @@ function Settings(props: {
   setShowColTotals: Dispatch<SetStateAction<boolean>>,
   presets: string[],
   setCurrPreset: Dispatch<SetStateAction<Preset>> }) {
+
+  const { title, setTitle } = useGameContext();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -57,25 +59,10 @@ function Settings(props: {
           <label>
             <input 
               name="titleInput" 
-              defaultValue={props.title}
+              defaultValue={title}
               onClick={e => e.currentTarget.select()}
-              onChange={e => props.setTitle(e.target.value)} />
+              onChange={e => setTitle(e.target.value)} />
           </label>
-          <div style={{ marginTop: '20px'}}>
-            <label>
-              <select 
-                className='dropdown-select'
-                value={props.colNum}
-                onChange={e => props.setColNum(Number(e.target.value))}>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-              COLUMNS
-            </label>
-          </div>
           <div style={{ marginTop: '20px'}}>
             <label>
               PRESET:
@@ -89,6 +76,21 @@ function Settings(props: {
                     </option>
                     ))}
               </select>
+            </label>
+          </div>
+          <div style={{ marginTop: '20px'}}>
+            <label>
+              <select 
+                className='dropdown-select'
+                value={props.colNum}
+                onChange={e => props.setColNum(Number(e.target.value))}>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              # OF PLAYERS
             </label>
           </div>
           <div style={{ marginTop: '20px' }}>
