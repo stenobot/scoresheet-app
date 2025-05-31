@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Scoresheet from './components/Scoresheet';
 import Start from './components/Start';
-import Settings from './components/Settings';
+import ProgScoresheet from './components/ProgressiveRook/ProgScoresheet';
+import ProgSettings from './components/ProgressiveRook/ProgSettings';
+import MahjongSettingsPlayers from './components/Mahjong/MahjongSettingsPlayers';
 import GameContextProvider from './contexts/GameContext';
+import ProgContextProvider from './contexts/ProgContext';
 
 export enum Preset {
   None = 'none',
@@ -13,46 +15,39 @@ export enum Preset {
 }
 
 function App() {
-  const [colNum, setColNum] = useState(2);
-  const [showRowNums, setShowRowNums] = useState(false);
-  const [startingRowNum, setStartingRowNum] = useState(1);
-  const [showColTotals, setShowColTotals] = useState(false);
-  const [presets] = useState([Preset.None, Preset.ProgressiveRook, Preset.Mahjong]);
-  const [currPreset, setCurrPreset] = useState(Preset.None);
-
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Start />} />
+        <Route path="/" element={
+            <GameContextProvider>
+              <Start />
+            </GameContextProvider>  
+          } />
         <Route 
-          path="/settings" 
+          path="/prog-settings" 
           element={
-            <GameContextProvider>      
-              <Settings 
-                colNum={colNum}
-                setColNum={setColNum}
-                showRowNums={showRowNums}
-                setShowRowNums={setShowRowNums}
-                startingRowNum={startingRowNum}
-                setStartingRowNum={setStartingRowNum}
-                showColTotals={showColTotals}
-                setShowColTotals={setShowColTotals}
-                presets={presets}
-                setCurrPreset={setCurrPreset} />
+              <GameContextProvider>      
+                <ProgContextProvider>
+                  <ProgSettings />
+                </ProgContextProvider>
               </GameContextProvider>
             } />
         <Route 
-          path="/scoresheet" 
+          path="/prog-scoresheet" 
+          element={
+              <GameContextProvider>
+                <ProgContextProvider>
+                  <ProgScoresheet />
+                </ProgContextProvider>
+              </GameContextProvider>
+            } />
+        <Route
+          path="/mahjong-settings-players"
           element={
             <GameContextProvider>
-              <Scoresheet 
-                colNum={colNum}
-                showRowNums={showRowNums}
-                startingRowNum={startingRowNum}
-                showColTotals={showColTotals}
-                currPreset={currPreset} />
-              </GameContextProvider>
-            } />
+              <MahjongSettingsPlayers />
+            </GameContextProvider>
+          } />
       </Routes>
     </Router>
   );

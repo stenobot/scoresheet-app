@@ -1,7 +1,7 @@
 import {createContext, useState, PropsWithChildren, useContext} from 'react';
 
 enum GameType {
-  None = 'none',
+  Simple = 'Simple Scoresheet',
   ProgressiveRook = 'Progressive Rook',
   Mahjong = 'Mahjong (1960s)'
 };
@@ -9,7 +9,7 @@ enum GameType {
 export const gameTypes = Object.values(GameType);
 
 const GameContext = createContext({
-    gameType: GameType.None,
+    gameType: GameType.Simple,
     setGameType: (gameType: GameType) => {},
     title: '',
     setTitle: (title: string) => {}
@@ -17,7 +17,7 @@ const GameContext = createContext({
 
 const GameContextProvider = (props: PropsWithChildren<{}>) => {
     const [title, setTitle] = useState('Game 1');
-    const [gameType, setGameType] = useState<GameType>(GameType.ProgressiveRook);
+    const [gameType, setGameType] = useState<GameType>(GameType.ProgressiveRook); // Default to Progressive Rook
     return (
         <GameContext.Provider value={{
             gameType,
@@ -31,5 +31,4 @@ const GameContextProvider = (props: PropsWithChildren<{}>) => {
 };
 
 export const useGameContext = () => useContext(GameContext);
-
 export default GameContextProvider;

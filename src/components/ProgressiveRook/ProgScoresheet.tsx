@@ -1,16 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import PrimaryButton from './PrimaryButton';
-import { Preset } from '../App';
-import { useGameContext } from '../contexts/GameContext';
+import PrimaryButton from '../PrimaryButton';
+import { useGameContext, gameTypes } from '../../contexts/GameContext';
+import { useProgContext } from '../../contexts/ProgContext';
 
-function Scoresheet(props: { 
-  colNum: number;
-  showRowNums: boolean;
-  startingRowNum: number;
-  showColTotals: boolean;
-  currPreset: string; }) { 
+function ProgScoresheet() { 
+  const { gameType, title } = useGameContext();
+  const { 
+    colNum, 
+    setColNum, 
+    showRowNums, 
+    setShowRowNums, 
+    startingRowNum, 
+    setStartingRowNum, 
+    showColTotals, 
+    setShowColTotals } = useProgContext();
+
   // initial column totals values to set below arrays
-  const initialColTotals = Array.from(Array(props.colNum).keys()).map( i => 0);
+  const initialColTotals = Array.from(Array(colNum).keys()).map( i => 0);
   // create 2d array for all cell values, 
   // as a source of truth when we column totals
   const [rowsValues, setRowsValues] = useState([initialColTotals]);
@@ -19,10 +25,9 @@ function Scoresheet(props: {
     // if show row numbers is selected, add extra blank "" element for row number label column 
     // to beginning of initial array to ensure that array.map to UI works correctly.
     // this variable extra element also needs to be accounted for when array is updated
-    props.showRowNums ? ["", ...initialColTotals] : initialColTotals
+    showRowNums ? ["", ...initialColTotals] : initialColTotals
   );
 
-  const { title } = useGameContext();
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
   const rowNumDoubleTwelveRuleAppliedRef = useRef(false);
@@ -56,7 +61,7 @@ function Scoresheet(props: {
             const td = cells[j];
             // if cell's value is a number...
             if (Number.isInteger(Number(td.innerHTML))) {
-              if (props.showRowNums && j === 0) {
+              if (showRowNums && j === 0) {
                 // cell is row number label, no-op
                 continue;
               }
@@ -101,17 +106,17 @@ function Scoresheet(props: {
     console.log(`addTableRow start - rowsValues.length: ${rowsValues.length}`);
     const tBody = document.getElementById('tbody');
     const trBody = document.createElement('tr');
-    for (let i = 0; i < props.colNum + 1; i++) {
+    for (let i = 0; i < colNum + 1; i++) {
       if (i === 0) {
         // add row number label first, if option selected
-        if (props.showRowNums) {
-          const currRowNum = props.startingRowNum + rowNumRef.current;
+        if (showRowNums) {
+          const currRowNum = startingRowNum + rowNumRef.current;
           const td = document.createElement('td');
           td.innerHTML = `${currRowNum}`;
 
           // special rule for Progressive Rook preset,
           // where row 12 is doubled
-          if (props.currPreset === Preset.ProgressiveRook && 
+          if (gameType === gameTypes[1] && 
             currRowNum === 12 &&
             rowNumDoubleTwelveRuleAppliedRef.current === false) {
             rowNumDoubleTwelveRuleAppliedRef.current = true;
@@ -223,17 +228,17 @@ function Scoresheet(props: {
     <div className="App">
       <header className="App-header">
         <table
-          className={ props.showRowNums ? 'tableWithRowNums' : 'tableNoRowNums' }>
+          className={ showRowNums ? 'tableWithRowNums' : 'tableNoRowNums' }>
           <caption>
-            <h2 className={ props.showRowNums ? 'titleWithRowNums' : 'titleNoRowNums' }>{title}</h2>
+            <h2 className={ showRowNums ? 'titleWithRowNums' : 'titleNoRowNums' }>{title}</h2>
           </caption>
           <thead style={{ padding: '5px' }}>
             <tr id="theadtrow">
-              { props.showRowNums === false ? 
-                  Array.from(Array(props.colNum).keys()).map( i => 
+              { showRowNums === false ? 
+                  Array.from(Array(colNum).keys()).map( i => 
                     <th contentEditable suppressContentEditableWarning={true} key={i} className='normalCellHeader'>P{i + 1}</th>
                   ) : 
-                  Array.from(Array(props.colNum + 1).keys()).map( i => {
+                  Array.from(Array(colNum + 1).keys()).map( i => {
                     return i === 0 ?
                       <th className='numLabelCellHeader' key={i}></th>
                       : <th className='normalCellHeader' contentEditable  suppressContentEditableWarning={true} key={i}>P{i}</th>}
@@ -245,10 +250,10 @@ function Scoresheet(props: {
             <tr> 
             </tr>
           </tbody>
-          {props.showColTotals === true &&
+          {showColTotals === true &&
             <tfoot>
               <tr>
-                {props.showRowNums === false ? 
+                {showRowNums === false ? 
                   footerValues.map( (footerValue, i) => 
                     <th key={i} className='normalCellFooter'>{footerValue}</th>
                   ) : 
@@ -272,4 +277,4 @@ function Scoresheet(props: {
     </div>
   );
 }
-export default Scoresheet;
+export default ProgScoresheet;
