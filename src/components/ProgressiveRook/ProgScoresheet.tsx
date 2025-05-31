@@ -4,19 +4,15 @@ import { useGameContext, gameTypes } from '../../contexts/GameContext';
 import { useProgContext } from '../../contexts/ProgContext';
 
 function ProgScoresheet() { 
-  const { gameType, title } = useGameContext();
+  const { gameType, title, currRound, setCurrRound } = useGameContext();
   const { 
     colNum, 
-    setColNum, 
     showRowNums, 
-    setShowRowNums, 
     startingRowNum, 
-    setStartingRowNum, 
-    showColTotals, 
-    setShowColTotals } = useProgContext();
+    showColTotals } = useProgContext();
 
   // initial column totals values to set below arrays
-  const initialColTotals = Array.from(Array(colNum).keys()).map( i => 0);
+  const initialColTotals = Array.from(Array(colNum).keys()).map( () => 0);
   // create 2d array for all cell values, 
   // as a source of truth when we column totals
   const [rowsValues, setRowsValues] = useState([initialColTotals]);
@@ -37,6 +33,7 @@ function ProgScoresheet() {
   /// </summary>
   const handleAddRowClick = () => {
     // console.log(`handleAddRowClick - rowsValues.length: ${rowsValues.length}`)
+    setCurrRound(currRound + 1);
     addTableRow();
   }
 
@@ -231,6 +228,7 @@ function ProgScoresheet() {
           className={ showRowNums ? 'tableWithRowNums' : 'tableNoRowNums' }>
           <caption>
             <h2 className={ showRowNums ? 'titleWithRowNums' : 'titleNoRowNums' }>{title}</h2>
+            <h6 className={ showRowNums ? 'subtitleWithRowNums' : 'subtitleNoRowNums' }>Round {currRound}</h6>
           </caption>
           <thead style={{ padding: '5px' }}>
             <tr id="theadtrow">
@@ -269,7 +267,7 @@ function ProgScoresheet() {
         </table>
         <div style={{ marginTop: '0.7em' }}>
           <PrimaryButton onClick={handleAddRowClick}>
-            Add Row
+            Next Round
           </PrimaryButton>
         </div>
         {/* <p style={{ color: '#70aacb', fontSize: '20px'}}>(<kbd>Double-click</kbd> row to delete)</p> */}

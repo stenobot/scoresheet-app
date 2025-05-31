@@ -25,6 +25,8 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .titleNoRowNums {
@@ -32,6 +34,26 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.subtitleWithRowNums {
+  margin-left: 0.5em;
+  color: #70aacb;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.subtitleNoRowNums {
+  color: #70aacb;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .tableNoRowNums {
