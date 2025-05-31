@@ -5,11 +5,11 @@ import { useProgContext } from '../../contexts/ProgContext';
 
 function ProgScoresheet() { 
   const { 
-    gameType, 
-    title, 
-    currRound, 
-    setCurrRound, 
-    players, 
+    gameType,
+    title,
+    currRound,
+    setCurrRound,
+    players,
     setPlayers } = useGameContext();
   const { 
     showRowNums, 
@@ -169,6 +169,41 @@ function ProgScoresheet() {
     }
   }
 
+  /// <summary>
+  ///   Changes the name of a player in the players array.
+  /// </summary>
+  /// <param name="name">New name for the player</param>
+  /// <param name="index">Index of the player in the players array</param>
+  const changeName = (name: string, index: number) => {
+    // Update the players array with the new name
+    const updatedPlayers = [...players];
+    if (index >= 0 && index < updatedPlayers.length) {
+      updatedPlayers[index] = name;
+      setPlayers(updatedPlayers);
+    } else {
+      console.error(`Index ${index} is out of bounds for players array.`);
+    } 
+  };
+
+  /// <summary>
+  ///   Handles input in a cell to limit the number of characters to 4.
+  /// </summary>
+  /// <param name="e">Event</param>
+  const handleCellInput = (e: React.FormEvent<HTMLElement>) => {
+    const maxChars = 4;
+    const el = e.currentTarget;
+    if (el.textContent && el.textContent.length > maxChars) {
+      el.textContent = el.textContent.slice(0, maxChars);
+      // Move cursor to end
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+    }
+  };
+
   /// <summary> 
   ///   Loops through a 2d array of numbers and sums the values in each column. 
   /// </summary>
@@ -240,12 +275,19 @@ function ProgScoresheet() {
             <tr id="theadtrow">
               { showRowNums === false ? 
                   Array.from(players.keys()).map( i => 
-                    <th contentEditable suppressContentEditableWarning={true} key={i} className='normalCellHeader'>P{i + 1}</th>
+                    <th contentEditable suppressContentEditableWarning={true} key={i} className='normalCellHeader'>{players[i]}</th>
                   ) : 
                   Array.from(Array(players.length + 1).keys()).map( i => {
                     return i === 0 ?
                       <th className='numLabelCellHeader' key={i}></th>
-                      : <th className='normalCellHeader' contentEditable  suppressContentEditableWarning={true} key={i}>P{i}</th>}
+                      : <th
+                          className='normalCellHeader'
+                          contentEditable
+                          onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
+                          onInput={handleCellInput}
+                          suppressContentEditableWarning={true}
+                          key={i}
+                        >{players[i - 1]}</th>}
                   )
               }
             </tr>
