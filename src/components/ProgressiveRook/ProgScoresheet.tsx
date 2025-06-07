@@ -41,10 +41,11 @@ function ProgScoresheet() {
   const handleNextRoundClicked = () => {
     setCurrRound(currRound + 1);
     const currDealer = players[currRound % players.length];
-    //console.log(`handleNextRoundClicked - currDealer: ${currDealer}`);
     setCurrDealer(currDealer);
+    console.log(`handleNextRoundClicked - players: ${players}, currDealer: ${currDealer}`);
     addTableRow();
-    highlightDealerColumn();
+    const dealerIndex = players.indexOf(currDealer);
+    highlightDealerColumn(dealerIndex);
   }
 
   /// <summary>
@@ -53,8 +54,7 @@ function ProgScoresheet() {
   ///   with the value of each cell.
   /// </summary>
   const handleCellChanged = () => {
-    console.log(`handleCellChanged Start - rowsValues.length: ${rowsValues.length}`);
-
+    //console.log(`handleCellChanged Start - rowsValues.length: ${rowsValues.length}`);
     const tBody = document.getElementById('tbody');
     const tRows = tBody?.getElementsByTagName('tr');
     if (tRows) {
@@ -93,13 +93,8 @@ function ProgScoresheet() {
     setFooterValues(nextFooterValues);
   }
 
-  const highlightDealerColumn = () => {
-    // Find the index of the current dealer
-    const dealerIndex = players.indexOf(currDealer);
-    //TODO this is where the bug is. current dealer or dealer index is wrong for first couple clicks and skips the last column
-    // dealer index: 0,0,1,2,3,4,0,1...
-    // curr dealer: P1, P1, P2, P3, P4, P5, P1...
-    //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}, currDealer: ${currDealer}`);
+  const highlightDealerColumn = (dealerIndex: number) => { 
+    //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}`);
     if (dealerIndex !== -1) {
       // Get all table rows
       //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}`);
@@ -121,9 +116,9 @@ function ProgScoresheet() {
           }
           
           //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}`);
-          if (cells[dealerIndex]) {
+          if (cells[dealerIndex + 1]) { // +1 because first cell is row number label
             // Add highlight to the dealer column cells
-            cells[dealerIndex].classList.add('dealerColumnHighlight');
+            cells[dealerIndex + 1].classList.add('dealerColumnHighlight');
           }
         }
       }
@@ -301,7 +296,9 @@ function ProgScoresheet() {
       // only fire once when page loads
       addTableRow();
       makeHeaderCellsAutoSelect();
-      highlightDealerColumn();
+      const dealerIndex = players.indexOf(currDealer);
+      highlightDealerColumn(dealerIndex);
+      console.log(`useEffect - didMountRef.current: ${didMountRef.current}`);
       didMountRef.current = true;
     }
   });  

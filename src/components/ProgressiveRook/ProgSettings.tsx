@@ -19,29 +19,21 @@ function ProgSettings() {
 
   useEffect(() => {
     console.log("url changed");
-    //console.log(`useEffect - players: ${players}, currDealer: ${currDealer}`);
   }, [location]);
 
   const handlePlayersChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPlayers = Number(e.target.value);
     const playersArray = Array.from({ length: selectedPlayers }, (_, i) => `P${i + 1}`);
     setPlayers(playersArray);
-    //console.log(`handlePlayersChange - playersArray.length: ${playersArray.length}`);
-    //console.log(`handlePlayersChange - playersArray[0]: ${playersArray[0]}`);
-    //console.log(`handlePlayersChange - players: ${players}, currDealer: ${currDealer}`);
   };
 
   const handleStartClick = () => {
-    console.log(`handleStartClick - players: ${players}`);
-
     // Workaround to set starting row for Simple Scoresheet
     if (gameType === gameTypes[0]) {
       setStartingRowNum(1);
     }
     setCurrDealer(players[0]); // Set the first player as the current dealer
-    console.log(`handleStartClick - currDealer: ${currDealer}`);
-    //const updatedPlayers = [...players];
-    //console.log(`handleStartClick - players[0]: ${players[0]}, currDealer: ${currDealer}`);
+    console.log(`handleStartClick - players: ${players}, currDealer: ${currDealer}`);
     navigate('/prog-scoresheet');
   };
 
