@@ -16,36 +16,43 @@ const GameContext = createContext({
     currRound: 0,
     setCurrRound: (currRound: number) => {},
     players: [] as string[],
-    setPlayers: (players: string[]) => {}
+    setPlayers: (players: string[]) => {},
+    currDealer: '',
+    setCurrDealer: (currDealer: string) => {}
 });
 
 const getInitialState = () => {
-    const title = localStorage.getItem('title') || 'Game 1';
     const gameType = localStorage.getItem('gameType') as GameType || GameType.ProgressiveRook;
+    const title = localStorage.getItem('title') || 'Game 1';
     const currRound = parseInt(localStorage.getItem('currRound') || '1', 10);
-    const players = JSON.parse(localStorage.getItem('players') || '[]');
+    const players = JSON.parse(localStorage.getItem('players') || '["P1", "P2", "P3", "P4"]') as string[];
+    const currDealer = localStorage.getItem('currDealer') || 'P1';
 
     return {
         title,
         gameType,
         currRound,
-        players
+        players,
+        currDealer
     };
 }
 
 const GameContextProvider = (props: PropsWithChildren<{}>) => {
     const [title, setTitle] = useState(getInitialState().title);
-    const [gameType, setGameType] = useState<GameType>(getInitialState().gameType); // Default to Progressive Rook
+    const [gameType, setGameType] = useState<GameType>(getInitialState().gameType);
     const [currRound, setCurrRound] = useState(getInitialState().currRound);
     const [players, setPlayers] = useState<string[]>(getInitialState().players);
+    const [currDealer, setCurrDealer] = useState(getInitialState().currDealer);
 
     useEffect(() => {
-        localStorage.setItem('title', title);
+        // Save the current state to localStorage whenever it changes
         localStorage.setItem('gameType', gameType);
+        localStorage.setItem('title', title);
         localStorage.setItem('currRound', currRound.toString());
         localStorage.setItem('players', JSON.stringify(players));
+        localStorage.setItem('currDealer', currDealer);
     }
-    , [title, gameType, currRound, players]);
+    , [title, gameType, currRound, players, currDealer]);
 
     return (
         <GameContext.Provider value={{
@@ -56,7 +63,9 @@ const GameContextProvider = (props: PropsWithChildren<{}>) => {
             currRound,
             setCurrRound,
             players,
-            setPlayers
+            setPlayers,
+            currDealer,
+            setCurrDealer
         }}>
             {props.children}
         </GameContext.Provider>

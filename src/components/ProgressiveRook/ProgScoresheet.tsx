@@ -10,7 +10,9 @@ function ProgScoresheet() {
     currRound,
     setCurrRound,
     players,
-    setPlayers } = useGameContext();
+    setPlayers,
+    currDealer,
+    setCurrDealer } = useGameContext();
   const { 
     showRowNums, 
     startingRowNum, 
@@ -34,12 +36,15 @@ function ProgScoresheet() {
   const rowNumDoubleTwelveRuleAppliedRef = useRef(false);
 
   /// <summary>
-  ///   Adds a new row when the Add Row button is clicked.
+  ///   Adds a new row and other functions when Next Round button is clicked.
   /// </summary>
-  const handleAddRowClick = () => {
-    // console.log(`handleAddRowClick - rowsValues.length: ${rowsValues.length}`)
+  const handleNextRoundClicked = () => {
     setCurrRound(currRound + 1);
+    const currDealer = players[currRound % players.length];
+    //console.log(`handleNextRoundClicked - currDealer: ${currDealer}`);
+    setCurrDealer(currDealer);
     addTableRow();
+    highlightDealerColumn();
   }
 
   /// <summary>
@@ -88,25 +93,62 @@ function ProgScoresheet() {
     setFooterValues(nextFooterValues);
   }
 
+  const highlightDealerColumn = () => {
+    // Find the index of the current dealer
+    const dealerIndex = players.indexOf(currDealer);
+    //TODO this is where the bug is. current dealer or dealer index is wrong for first couple clicks and skips the last column
+    // dealer index: 0,0,1,2,3,4,0,1...
+    // curr dealer: P1, P1, P2, P3, P4, P5, P1...
+    //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}, currDealer: ${currDealer}`);
+    if (dealerIndex !== -1) {
+      // Get all table rows
+      //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}`);
+      const tBody = document.getElementById('tbody');
+      const tRows = tBody?.getElementsByTagName('tr');
+      if (tRows) {
+        //console.log(`highlightDealerColumn - tRows.length: ${tRows.length}`);
+        for (let i = 0; i < tRows.length; i++) {
+          const row = tRows[i];
+          const cells = row.getElementsByTagName('td');
+          //console.log(`highlightDealerColumn - cells: ${cells.length}`);
+
+          for (let j = 0; j < cells.length; j++)
+          {
+            if (cells[j]) {
+              // Remove highlight from all cells in row
+              cells[j].classList.remove('dealerColumnHighlight');
+            }
+          }
+          
+          //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}`);
+          if (cells[dealerIndex]) {
+            // Add highlight to the dealer column cells
+            cells[dealerIndex].classList.add('dealerColumnHighlight');
+          }
+        }
+      }
+    }
+  }
+
   /// <summary>
   ///   Deletes a row when it's double-clicked.
   ///  (Not currently used.)
   /// </summary>
   /// <param name="e">Event</param>
-  const handleTableDoubleClick = (e: React.MouseEvent<HTMLTableElement, MouseEvent>) => {
-    const target = e.target as HTMLElement;
-    if (target.tagName === 'TD') {
-      const parent = target.parentElement as HTMLElement;
-      parent.remove();
-      setCurrRound(currRound - 1);
-    }
-  }
+  // const handleTableDoubleClick = (e: React.MouseEvent<HTMLTableElement, MouseEvent>) => {
+  //   const target = e.target as HTMLElement;
+  //   if (target.tagName === 'TD') {
+  //     const parent = target.parentElement as HTMLElement;
+  //     parent.remove();
+  //     setCurrRound(currRound - 1);
+  //   }
+  // }
 
   /// <summary>
   ///   Adds a new row with editable cells to the table.
   /// </summary>
   const addTableRow = () => {
-    console.log(`addTableRow start - rowsValues.length: ${rowsValues.length}`);
+    //console.log(`addTableRow start - rowsValues.length: ${rowsValues.length}`);
     const tBody = document.getElementById('tbody');
     const trBody = document.createElement('tr');
     for (let i = 0; i < players.length + 1; i++) {
@@ -152,7 +194,7 @@ function ProgScoresheet() {
 
     // initialize new row in 2d array to zeros
     setRowsValues([...rowsValues, initialColTotals]);
-    console.log(`addTableRow end - rowsValues.length: ${rowsValues.length}`);
+    //console.log(`addTableRow end - rowsValues.length: ${rowsValues.length}`);
   }
 
   /// <summary>
@@ -180,6 +222,7 @@ function ProgScoresheet() {
     if (index >= 0 && index < updatedPlayers.length) {
       updatedPlayers[index] = name;
       setPlayers(updatedPlayers);
+      setCurrDealer(updatedPlayers[0]); // Update current dealer to first player. TODO bug: Right now this only works on first round
     } else {
       console.error(`Index ${index} is out of bounds for players array.`);
     } 
@@ -258,6 +301,7 @@ function ProgScoresheet() {
       // only fire once when page loads
       addTableRow();
       makeHeaderCellsAutoSelect();
+      highlightDealerColumn();
       didMountRef.current = true;
     }
   });  
@@ -275,7 +319,11 @@ function ProgScoresheet() {
             <tr id="theadtrow">
               { showRowNums === false ? 
                   Array.from(players.keys()).map( i => 
-                    <th contentEditable suppressContentEditableWarning={true} key={i} className='normalCellHeader'>{players[i]}</th>
+                    <th 
+                    contentEditable 
+                    suppressContentEditableWarning={true} 
+                    spellCheck={false} key={i} 
+                    className='normalCellHeader'>{players[i]}</th>
                   ) : 
                   Array.from(Array(players.length + 1).keys()).map( i => {
                     return i === 0 ?
@@ -286,8 +334,8 @@ function ProgScoresheet() {
                           onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
                           onInput={handleCellInput}
                           suppressContentEditableWarning={true}
-                          key={i}
-                        >{players[i - 1]}</th>}
+                          spellCheck={false}
+                          key={i}>{players[i - 1]}</th>}
                   )
               }
             </tr>
@@ -314,7 +362,7 @@ function ProgScoresheet() {
           }
         </table>
         <div style={{ marginTop: '0.7em' }}>
-          <PrimaryButton onClick={handleAddRowClick}>
+          <PrimaryButton onClick={handleNextRoundClicked}>
             Next Round
           </PrimaryButton>
         </div>

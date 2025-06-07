@@ -132,6 +132,11 @@ td:before {
   user-select: none;
 }
 
+.dealerColumnHighlight {
+  background-color: #003B3D;
+  color: #e4e4e4;
+}
+
 label {
   font-size: 0.8em;
 }
