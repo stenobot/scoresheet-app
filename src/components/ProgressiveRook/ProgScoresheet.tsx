@@ -54,7 +54,6 @@ function ProgScoresheet() {
   ///   with the value of each cell.
   /// </summary>
   const handleCellChanged = () => {
-    //console.log(`handleCellChanged Start - rowsValues.length: ${rowsValues.length}`);
     const tBody = document.getElementById('tbody');
     const tRows = tBody?.getElementsByTagName('tr');
     if (tRows) {
@@ -94,18 +93,14 @@ function ProgScoresheet() {
   }
 
   const highlightDealerColumn = (dealerIndex: number) => { 
-    //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}`);
     if (dealerIndex !== -1) {
       // Get all table rows
-      //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}`);
       const tBody = document.getElementById('tbody');
       const tRows = tBody?.getElementsByTagName('tr');
       if (tRows) {
-        //console.log(`highlightDealerColumn - tRows.length: ${tRows.length}`);
         for (let i = 0; i < tRows.length; i++) {
           const row = tRows[i];
           const cells = row.getElementsByTagName('td');
-          //console.log(`highlightDealerColumn - cells: ${cells.length}`);
 
           for (let j = 0; j < cells.length; j++)
           {
@@ -115,7 +110,6 @@ function ProgScoresheet() {
             }
           }
           
-          //console.log(`highlightDealerColumn - dealerIndex: ${dealerIndex}`);
           if (cells[dealerIndex + 1]) { // +1 because first cell is row number label
             // Add highlight to the dealer column cells
             cells[dealerIndex + 1].classList.add('dealerColumnHighlight');
@@ -189,7 +183,6 @@ function ProgScoresheet() {
 
     // initialize new row in 2d array to zeros
     setRowsValues([...rowsValues, initialColTotals]);
-    //console.log(`addTableRow end - rowsValues.length: ${rowsValues.length}`);
   }
 
   /// <summary>
