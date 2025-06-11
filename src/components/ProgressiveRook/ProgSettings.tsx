@@ -5,7 +5,7 @@ import { gameTypes, useGameContext } from '../../contexts/GameContext';
 import { useProgContext } from '../../contexts/ProgContext';
 
 function ProgSettings() {
-  const { gameType, title,players, setPlayers } = useGameContext();
+  const { gameType, title, players, setPlayers, currDealer, setCurrDealer } = useGameContext();
   const { 
     showRowNums, 
     setShowRowNums, 
@@ -18,7 +18,7 @@ function ProgSettings() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("url changed")
+    console.log("url changed");
   }, [location]);
 
   const handlePlayersChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -28,12 +28,12 @@ function ProgSettings() {
   };
 
   const handleStartClick = () => {
-    console.log(`players: ${players}`);
-
     // Workaround to set starting row for Simple Scoresheet
     if (gameType === gameTypes[0]) {
       setStartingRowNum(1);
     }
+    setCurrDealer(players[0]); // Set the first player as the current dealer
+    console.log(`handleStartClick - players: ${players}, currDealer: ${currDealer}`);
     navigate('/prog-scoresheet');
   };
 
