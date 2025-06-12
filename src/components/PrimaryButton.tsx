@@ -8,8 +8,9 @@ function PrimaryButton({ ...attributes }) {
         borderColor: '#003B3D',
         outline: '0', 
         textTransform: 'uppercase', 
-        fontSize: '16px',
+        fontSize: '1.4em',
         fontWeight: 'bold',
+        fontFamily: 'm5x7',
         cursor: 'pointer', 
         boxShadow: '0px 2px 2px #003B3D'}} 
         {...attributes}>

@@ -6,7 +6,9 @@ import ProgScoresheet from './components/ProgressiveRook/ProgScoresheet';
 import ProgSettings from './components/ProgressiveRook/ProgSettings';
 import MahjongSettingsPlayers from './components/Mahjong/MahjongSettingsPlayers';
 import GameContextProvider from './contexts/GameContext';
-import ProgContextProvider from './contexts/ProgContext';
+import ProgSettingsContextProvider from './contexts/ProgSettingsContext';
+import MahjongSettingsContextProvider from './contexts/MahjongSettingsContext';
+import MahjongScoresheet from './components/Mahjong/MahjongScoresheet';
 
 export enum Preset {
   None = 'none',
@@ -27,27 +29,38 @@ function App() {
           path="/prog-settings" 
           element={
               <GameContextProvider>      
-                <ProgContextProvider>
+                <ProgSettingsContextProvider>
                   <ProgSettings />
-                </ProgContextProvider>
+                </ProgSettingsContextProvider>
               </GameContextProvider>
             } />
         <Route 
           path="/prog-scoresheet" 
           element={
               <GameContextProvider>
-                <ProgContextProvider>
+                <ProgSettingsContextProvider>
                   <ProgScoresheet />
-                </ProgContextProvider>
+                </ProgSettingsContextProvider>
               </GameContextProvider>
             } />
         <Route
           path="/mahjong-settings-players"
           element={
             <GameContextProvider>
-              <MahjongSettingsPlayers />
+              <MahjongSettingsContextProvider>
+                <MahjongSettingsPlayers />
+              </MahjongSettingsContextProvider>
             </GameContextProvider>
           } />
+        <Route 
+          path="/mahjong-scoresheet" 
+          element={
+              <GameContextProvider>
+                <MahjongSettingsContextProvider>
+                  <MahjongScoresheet />
+                </MahjongSettingsContextProvider>
+              </GameContextProvider>
+            } />
       </Routes>
     </Router>
   );

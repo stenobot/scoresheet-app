@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
 import { gameTypes, useGameContext } from '../../contexts/GameContext';
-import { useProgContext } from '../../contexts/ProgContext';
+import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgSettings() {
   const { gameType, title, players, setPlayers, currDealer, setCurrDealer } = useGameContext();
@@ -12,7 +12,7 @@ function ProgSettings() {
     startingRowNum, 
     setStartingRowNum, 
     showColTotals, 
-    setShowColTotals } = useProgContext();
+    setShowColTotals } = useProgSettingsContext();
 
   const navigate = useNavigate();
   const location = useLocation();

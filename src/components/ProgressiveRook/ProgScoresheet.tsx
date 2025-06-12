@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext, gameTypes } from '../../contexts/GameContext';
-import { useProgContext } from '../../contexts/ProgContext';
+import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgScoresheet() { 
   const { 
@@ -16,7 +16,7 @@ function ProgScoresheet() {
   const { 
     showRowNums, 
     startingRowNum, 
-    showColTotals } = useProgContext();
+    showColTotals } = useProgSettingsContext();
 
   // initial column totals values to set below arrays
   const initialColTotals = Array.from(players.keys()).map( () => 0);
