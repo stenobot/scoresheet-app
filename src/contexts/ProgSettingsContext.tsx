@@ -1,6 +1,6 @@
 import {createContext, useState, PropsWithChildren, useContext} from 'react';
 
-const ProgContext = createContext({
+const ProgSettingsContext = createContext({
     showRowNums: false,
     setShowRowNums: (showRowNums: boolean) => {},
     startingRowNum: 0,
@@ -9,13 +9,13 @@ const ProgContext = createContext({
     setShowColTotals: (showColTotals: boolean) => {},
 });
 
-const ProgContextProvider = (props: PropsWithChildren<{}>) => {
+const ProgSettingsContextProvider = (props: PropsWithChildren<{}>) => {
     const [showRowNums, setShowRowNums] = useState(true);
     const [startingRowNum, setStartingRowNum] = useState(6);
     const [showColTotals, setShowColTotals] = useState(true);
 
     return (
-        <ProgContext.Provider value={{
+        <ProgSettingsContext.Provider value={{
             showRowNums,
             setShowRowNums,
             startingRowNum,
@@ -24,9 +24,9 @@ const ProgContextProvider = (props: PropsWithChildren<{}>) => {
             setShowColTotals
         }}>
             {props.children}
-        </ProgContext.Provider>
+        </ProgSettingsContext.Provider>
     );
 };
 
-export const useProgContext = () => useContext(ProgContext);
-export default ProgContextProvider;
+export const useProgSettingsContext = () => useContext(ProgSettingsContext);
+export default ProgSettingsContextProvider;

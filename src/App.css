@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'm5x7';
+  src: url('./fonts/m5x7.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .App {
   text-align: center;
   background-color: #282c34;
@@ -17,6 +24,14 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.pageTitle {
+  font-family: 'm5x7', monospace;
+  font-size: 2em;
+  color: #e4e4e4;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .titleWithRowNums {
@@ -157,7 +172,7 @@ input {
   font-size: 0.8em;
   margin-right: 0.7em;
   height: 1.8em;
-  width: 3em;
+  width: 5em;
   vertical-align: middle;
 }
 
