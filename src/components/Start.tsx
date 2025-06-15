@@ -25,39 +25,35 @@ function Start() {
   }
 
   return (
-   <div className="App">
-      <header className="App-header">
+    <div className='container'>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <label>
+          <input
+            className='input'
+            defaultValue={title}
+            onClick={e => e.currentTarget.select()}
+            onChange={e => setTitle(e.target.value)} />
+        </label>
+        <label>
+          <select 
+            className='setting-dropdown'
+            value={gameType}
+            onChange={e => setGameType(e.target.value as unknown as typeof gameType)}>
+              {gameTypes.map((i) => (
+                <option key={i}>
+                  {i}
+                </option>
+              ))}
+          </select>
+        </label>
+      </div>
+      <label>
         <div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <label>
-              <input 
-                name="titleInput" 
-                defaultValue={title}
-                onClick={e => e.currentTarget.select()}
-                onChange={e => setTitle(e.target.value)} />
-            </label>
-            <label>
-              <select 
-                className='dropdown-select-game-type'
-                value={gameType}
-                onChange={e => setGameType(e.target.value as unknown as typeof gameType)}>
-                  {gameTypes.map((i) => (
-                    <option key={i}>
-                      {i}
-                    </option>
-                  ))}
-              </select>
-            </label>
-          </div>
-          <label>
-            <div style={{ marginTop: '25px'}}>
-              <PrimaryButton onClick={handleNewClick}>
-                New Game
-              </PrimaryButton>
-            </div>
-          </label>
+          <PrimaryButton onClick={handleNewClick}>
+            New Game
+          </PrimaryButton>
         </div>
-      </header>
+      </label>
     </div>
   );
 }
