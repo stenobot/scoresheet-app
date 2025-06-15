@@ -71,7 +71,7 @@ function ProgScoresheet() {
                 // cell is row number label, no-op
                 continue;
               }
-              td.className = 'normalCell';
+              td.className = 'normal-cell';
               const  cellValue = Number(td.innerHTML);
               // ...and it's different from corresponding 2d array value...
               if (cellValue !== rowsValues[i][j]) {
@@ -81,7 +81,7 @@ function ProgScoresheet() {
             }
             else {
               // cell's value is not a number
-              td.className = 'normalCellBadInput';
+              td.className = 'normal-cell-bad-input';
             }
           }
         }
@@ -106,13 +106,13 @@ function ProgScoresheet() {
           {
             if (cells[j]) {
               // Remove highlight from all cells in row
-              cells[j].classList.remove('dealerColumnHighlight');
+              cells[j].classList.remove('dealer-column-highlight');
             }
           }
           
           if (cells[dealerIndex + 1]) { // +1 because first cell is row number label
             // Add highlight to the dealer column cells
-            cells[dealerIndex + 1].classList.add('dealerColumnHighlight');
+            cells[dealerIndex + 1].classList.add('dealer-column-highlight');
           }
         }
       }
@@ -159,7 +159,7 @@ function ProgScoresheet() {
             rowNumRef.current++;
           }
 
-          td.className = 'numLabelCell';
+          td.className = 'num-label-cell';
           td.onclick = () => selectElementContents(td);
           trBody.appendChild(td);
         }
@@ -297,67 +297,65 @@ function ProgScoresheet() {
   });  
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <table
-          className={ showRowNums ? 'tableWithRowNums' : 'tableNoRowNums' }>
-          <caption>
-            <h2 className={ showRowNums ? 'titleWithRowNums' : 'titleNoRowNums' }>{title}</h2>
-            <h6 className={ showRowNums ? 'subtitleWithRowNums' : 'subtitleNoRowNums' }>Round {currRound}</h6>
-          </caption>
-          <thead style={{ padding: '5px' }}>
-            <tr id="theadtrow">
-              { showRowNums === false ? 
-                  Array.from(players.keys()).map( i => 
-                    <th 
-                    contentEditable 
-                    suppressContentEditableWarning={true} 
-                    spellCheck={false} key={i} 
-                    className='normalCellHeader'>{players[i]}</th>
-                  ) : 
-                  Array.from(Array(players.length + 1).keys()).map( i => {
-                    return i === 0 ?
-                      <th className='numLabelCellHeader' key={i}></th>
-                      : <th
-                          className='normalCellHeader'
-                          contentEditable
-                          onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
-                          onInput={handleCellInput}
-                          suppressContentEditableWarning={true}
-                          spellCheck={false}
-                          key={i}>{players[i - 1]}</th>}
-                  )
+    <div className="container">
+      <table
+        className={ showRowNums ? 'table-with-row-nums' : 'table-no-row-nums' }>
+        <caption>
+          <h2 className={ showRowNums ? 'title-with-row-nums' : 'title-no-row-nums' }>{title}</h2>
+          <h6 className={ showRowNums ? 'subtitle-with-row-nums' : 'subtitle-no-row-nums' }>Round {currRound}</h6>
+        </caption>
+        <thead style={{ padding: '5px' }}>
+          <tr id="theadtrow">
+            { showRowNums === false ? 
+                Array.from(players.keys()).map( i => 
+                  <th 
+                  contentEditable 
+                  suppressContentEditableWarning={true} 
+                  spellCheck={false} key={i} 
+                  className='normal-cell-header'>{players[i]}</th>
+                ) : 
+                Array.from(Array(players.length + 1).keys()).map( i => {
+                  return i === 0 ?
+                    <th className='num-label-cell-header' key={i}></th>
+                    : <th
+                        className='normal-cell-header'
+                        contentEditable
+                        onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
+                        onInput={handleCellInput}
+                        suppressContentEditableWarning={true}
+                        spellCheck={false}
+                        key={i}>{players[i - 1]}</th>}
+                )
+            }
+          </tr>
+        </thead>
+        <tbody id="tbody" onKeyUp={handleCellChanged}>
+          <tr> 
+          </tr>
+        </tbody>
+        {showColTotals === true &&
+          <tfoot>
+            <tr>
+              {showRowNums === false ? 
+                footerValues.map( (footerValue, i) => 
+                  <th key={i} className='normal-cell-footer'>{footerValue}</th>
+                ) : 
+                footerValues.map( (footerValue, i) => {
+                  return i === 0 ?
+                    <th className='num-label-cell-header' key={i}></th>
+                    : <th className='normal-cell-footer' key={i}>{footerValue}</th>}
+                )
               }
             </tr>
-          </thead>
-          <tbody id="tbody" onKeyUp={handleCellChanged}>
-            <tr> 
-            </tr>
-          </tbody>
-          {showColTotals === true &&
-            <tfoot>
-              <tr>
-                {showRowNums === false ? 
-                  footerValues.map( (footerValue, i) => 
-                    <th key={i} className='normalCellFooter'>{footerValue}</th>
-                  ) : 
-                  footerValues.map( (footerValue, i) => {
-                    return i === 0 ?
-                      <th className='numLabelCellHeader' key={i}></th>
-                      : <th className='normalCellFooter' key={i}>{footerValue}</th>}
-                  )
-                }
-              </tr>
-            </tfoot>
-          }
-        </table>
-        <div style={{ marginTop: '0.7em' }}>
-          <PrimaryButton onClick={handleNextRoundClicked}>
-            Next Round
-          </PrimaryButton>
-        </div>
-        {/* <p style={{ color: '#70aacb', fontSize: '20px'}}>(<kbd>Double-click</kbd> row to delete)</p> */}
-      </header>
+          </tfoot>
+        }
+      </table>
+      <div style={{ marginTop: '0.7em' }}>
+        <PrimaryButton onClick={handleNextRoundClicked}>
+          Next Round
+        </PrimaryButton>
+      </div>
+      {/* <p style={{ color: '#70aacb', fontSize: '20px'}}>(<kbd>Double-click</kbd> row to delete)</p> */}
     </div>
   );
 }
