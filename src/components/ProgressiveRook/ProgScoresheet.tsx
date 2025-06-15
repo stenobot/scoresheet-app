@@ -44,6 +44,7 @@ function ProgScoresheet() {
     setCurrDealer(currDealer);
     console.log(`handleNextRoundClicked - players: ${players}, currDealer: ${currDealer}`);
     addTableRow();
+    handleCellChanged();
     const dealerIndex = players.indexOf(currDealer);
     highlightDealerColumn(dealerIndex);
   }
@@ -74,7 +75,7 @@ function ProgScoresheet() {
               td.className = 'normal-cell';
               const  cellValue = Number(td.innerHTML);
               // ...and it's different from corresponding 2d array value...
-              if (cellValue !== rowsValues[i][j]) {
+              if (rowsValues[i] && cellValue !== rowsValues[i][j]) {
                 // ...update 2d array with current cell value
                 rowsValues[i][j] = cellValue;
               }
@@ -284,11 +285,23 @@ function ProgScoresheet() {
     }
   }
 
+  const getTableHeaderClass = () => {
+    switch (players.length) {
+      case 3:
+        return 'normal-cell-header-3';
+      case 5:
+        return 'normal-cell-header-5';
+      default:
+        return 'normal-cell-header';
+    }
+  }
+
   useEffect(() => {
     if (didMountRef.current === false) {
       // only fire once when page loads
       addTableRow();
       makeHeaderCellsAutoSelect();
+      handleCellChanged();
       const dealerIndex = players.indexOf(currDealer);
       highlightDealerColumn(dealerIndex);
       console.log(`useEffect - didMountRef.current: ${didMountRef.current}`);
@@ -312,13 +325,13 @@ function ProgScoresheet() {
                   contentEditable 
                   suppressContentEditableWarning={true} 
                   spellCheck={false} key={i} 
-                  className='normal-cell-header'>{players[i]}</th>
+                  className={getTableHeaderClass()}>{players[i]}</th>
                 ) : 
                 Array.from(Array(players.length + 1).keys()).map( i => {
                   return i === 0 ?
                     <th className='num-label-cell-header' key={i}></th>
                     : <th
-                        className='normal-cell-header'
+                        className={getTableHeaderClass()}
                         contentEditable
                         onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
                         onInput={handleCellInput}
