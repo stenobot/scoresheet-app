@@ -4,22 +4,15 @@ import { useGameContext, gameTypes } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgScoresheet() { 
-  const { 
-    gameType,
-    title,
-    currRound,
-    setCurrRound,
-    players,
-    setPlayers,
-    currDealer,
-    setCurrDealer } = useGameContext();
+  const { currentGame, setCurrentGame, addGame } = useGameContext();
+
   const { 
     showRowNums, 
     startingRowNum, 
     showColTotals } = useProgSettingsContext();
 
   // initial column totals values to set below arrays
-  const initialColTotals = Array.from(players.keys()).map( () => 0);
+  const initialColTotals = Array.from(currentGame.players.keys()).map( () => 0);
   // create 2d array for all cell values, 
   // as a source of truth when we column totals
   const [rowsValues, setRowsValues] = useState([initialColTotals]);
@@ -39,13 +32,19 @@ function ProgScoresheet() {
   ///   Adds a new row and other functions when Next Round button is clicked.
   /// </summary>
   const handleNextRoundClicked = () => {
-    setCurrRound(currRound + 1);
-    const currDealer = players[currRound % players.length];
-    setCurrDealer(currDealer);
-    console.log(`handleNextRoundClicked - players: ${players}, currDealer: ${currDealer}`);
+        setCurrentGame({
+      ...currentGame,
+      currRound: currentGame.currRound + 1
+    });
+    const currDealer = currentGame.players[currentGame.currRound % currentGame.players.length];
+    setCurrentGame({
+      ...currentGame,
+      currDealer: currDealer
+    });
+    console.log(`handleNextRoundClicked - players: ${currentGame.players}, currDealer: ${currDealer}`);
     addTableRow();
     handleCellChanged();
-    const dealerIndex = players.indexOf(currDealer);
+    const dealerIndex = currentGame.players.indexOf(currDealer);
     highlightDealerColumn(dealerIndex);
   }
 
@@ -141,7 +140,7 @@ function ProgScoresheet() {
     //console.log(`addTableRow start - rowsValues.length: ${rowsValues.length}`);
     const tBody = document.getElementById('tbody');
     const trBody = document.createElement('tr');
-    for (let i = 0; i < players.length + 1; i++) {
+    for (let i = 0; i < currentGame.players.length + 1; i++) {
       if (i === 0) {
         // add row number label first, if option selected
         if (showRowNums) {
@@ -151,7 +150,7 @@ function ProgScoresheet() {
 
           // special rule for Progressive Rook preset,
           // where row 12 is doubled
-          if (gameType === gameTypes[1] && 
+          if (currentGame.gameType === gameTypes[1] && 
             currRowNum === 12 &&
             rowNumDoubleTwelveRuleAppliedRef.current === false) {
             rowNumDoubleTwelveRuleAppliedRef.current = true;
@@ -207,11 +206,17 @@ function ProgScoresheet() {
   /// <param name="index">Index of the player in the players array</param>
   const changeName = (name: string, index: number) => {
     // Update the players array with the new name
-    const updatedPlayers = [...players];
+    const updatedPlayers = [...currentGame.players];
     if (index >= 0 && index < updatedPlayers.length) {
       updatedPlayers[index] = name;
-      setPlayers(updatedPlayers);
-      setCurrDealer(updatedPlayers[0]); // Update current dealer to first player. TODO bug: Right now this only works on first round
+      setCurrentGame({
+        ...currentGame,
+        players: updatedPlayers
+      });
+      setCurrentGame({
+        ...currentGame,
+        currDealer: updatedPlayers[0]
+      });
     } else {
       console.error(`Index ${index} is out of bounds for players array.`);
     } 
@@ -286,7 +291,7 @@ function ProgScoresheet() {
   }
 
   const getTableHeaderClass = () => {
-    switch (players.length) {
+    switch (currentGame.players.length) {
       case 3:
         return 'normal-cell-header-3';
       case 5:
@@ -302,7 +307,7 @@ function ProgScoresheet() {
       addTableRow();
       makeHeaderCellsAutoSelect();
       handleCellChanged();
-      const dealerIndex = players.indexOf(currDealer);
+      const dealerIndex = currentGame.players.indexOf(currentGame.currDealer);
       highlightDealerColumn(dealerIndex);
       console.log(`useEffect - didMountRef.current: ${didMountRef.current}`);
       didMountRef.current = true;
@@ -314,20 +319,20 @@ function ProgScoresheet() {
       <table
         className={ showRowNums ? 'table-with-row-nums' : 'table-no-row-nums' }>
         <caption>
-          <h2 className={ showRowNums ? 'title-with-row-nums' : 'title-no-row-nums' }>{title}</h2>
-          <h6 className={ showRowNums ? 'subtitle-with-row-nums' : 'subtitle-no-row-nums' }>Round {currRound}</h6>
+          <h2 className={ showRowNums ? 'title-with-row-nums' : 'title-no-row-nums' }>{currentGame.title}</h2>
+          <h6 className={ showRowNums ? 'subtitle-with-row-nums' : 'subtitle-no-row-nums' }>Round {currentGame.currRound}</h6>
         </caption>
         <thead style={{ padding: '5px' }}>
           <tr id="theadtrow">
             { showRowNums === false ? 
-                Array.from(players.keys()).map( i => 
+                Array.from(currentGame.players.keys()).map( i => 
                   <th 
                   contentEditable 
                   suppressContentEditableWarning={true} 
                   spellCheck={false} key={i} 
-                  className={getTableHeaderClass()}>{players[i]}</th>
+                  className={getTableHeaderClass()}>{currentGame.players[i]}</th>
                 ) : 
-                Array.from(Array(players.length + 1).keys()).map( i => {
+                Array.from(Array(currentGame.players.length + 1).keys()).map( i => {
                   return i === 0 ?
                     <th className='num-label-cell-header' key={i}></th>
                     : <th
@@ -337,7 +342,7 @@ function ProgScoresheet() {
                         onInput={handleCellInput}
                         suppressContentEditableWarning={true}
                         spellCheck={false}
-                        key={i}>{players[i - 1]}</th>}
+                        key={i}>{currentGame.players[i - 1]}</th>}
                 )
             }
           </tr>
