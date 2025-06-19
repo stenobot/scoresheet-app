@@ -1,6 +1,8 @@
 import {createContext, useState, PropsWithChildren, useContext, useEffect} from 'react';
+import { isEmpty } from '../utils/Utils';
+import { useLocation } from 'react-router-dom';
 
-enum GameType {
+export enum GameType {
   Simple = 'Simple Scoresheet',
   ProgressiveRook = 'Progressive Rook',
   Mahjong = 'Mahjong'
@@ -8,69 +10,125 @@ enum GameType {
 
 export const gameTypes = Object.values(GameType);
 
-const GameContext = createContext({
-    gameType: GameType.Simple,
-    setGameType: (gameType: GameType) => {},
-    title: '',
-    setTitle: (title: string) => {},
-    currRound: 0,
-    setCurrRound: (currRound: number) => {},
-    players: [] as string[],
-    setPlayers: (players: string[]) => {},
-    currDealer: '',
-    setCurrDealer: (currDealer: string) => {}
-});
-
-const getInitialState = () => {
-    const gameType = localStorage.getItem('gameType') as GameType || GameType.ProgressiveRook;
-    const title = localStorage.getItem('title') || 'Game 1';
-    const currRound = parseInt(localStorage.getItem('currRound') || '1', 10);
-    const players = JSON.parse(localStorage.getItem('players') || '["P1", "P2", "P3", "P4"]') as string[];
-    const currDealer = localStorage.getItem('currDealer') || 'P1';
-
-    return {
-        title,
-        gameType,
-        currRound,
-        players,
-        currDealer
-    };
+export interface Game {
+  id: string;
+  title: string;
+  gameType: GameType;
+  currRound: number;
+  players: string[];
+  currDealer: string;
+  settings: string;
 }
 
-const GameContextProvider = (props: PropsWithChildren<{}>) => {
-    const [title, setTitle] = useState(getInitialState().title);
-    const [gameType, setGameType] = useState<GameType>(getInitialState().gameType);
-    const [currRound, setCurrRound] = useState(getInitialState().currRound);
-    const [players, setPlayers] = useState<string[]>(getInitialState().players);
-    const [currDealer, setCurrDealer] = useState(getInitialState().currDealer);
+const getInitialState = () => {
+  const gamesStr = localStorage.getItem('games');
+  const games: Game[] = gamesStr ? JSON.parse(gamesStr) : [];
+  
+  // If no games exist, create initial game
+  if (games.length === 0) {
+    const initialGame: Game = {
+      id: '',
+      title: 'Game 1',
+      gameType: GameType.ProgressiveRook,
+      currRound: 1,
+      players: ['P1', 'P2', 'P3', 'P4'],
+      currDealer: 'P1',
+      settings: ''
+    };
+    games.push(initialGame);
 
-    useEffect(() => {
-        // Save the current state to localStorage whenever it changes
-        localStorage.setItem('gameType', gameType);
-        localStorage.setItem('title', title);
-        localStorage.setItem('currRound', currRound.toString());
-        localStorage.setItem('players', JSON.stringify(players));
-        localStorage.setItem('currDealer', currDealer);
-    }
-    , [title, gameType, currRound, players, currDealer]);
+    return initialGame;
+  }
 
-    return (
-        <GameContext.Provider value={{
-            gameType,
-            setGameType,
-            title,
-            setTitle,
-            currRound,
-            setCurrRound,
-            players,
-            setPlayers,
-            currDealer,
-            setCurrDealer
-        }}>
-            {props.children}
-        </GameContext.Provider>
+  // Return most recent game
+  return games[games.length - 1];
+};
+
+const cleanGames = (games: Game[]): Game[] => {
+    return games.filter(game => !isEmpty(game.id));
+};
+
+const saveGameToLocalStorage = (game: Game, games: Game[]) => {
+  // Remove games that don't have a valid id 
+  const cleanedGames = cleanGames(games);
+  
+  // Check if game with same ID already exists
+  const hasDuplicate = cleanedGames.some(existingGame => existingGame.id === game.id);
+  
+  // Only add the game if it's not already in the cleaned games
+  if (!hasDuplicate && !isEmpty(game.id)) {
+    cleanedGames.push(game);
+  }
+
+  localStorage.setItem('games', JSON.stringify(cleanedGames));
+}
+
+const GameContext = createContext({
+  currentGame: getInitialState(),
+  setCurrentGame: (game: Game) => {},
+  games: [] as Game[],
+  addGame: (game: Game) => {},
+  updateGame: (game: Game) => {},
+  deleteGame: (id: string) => {}
+});
+
+export const GameContextProvider = ({ children }: PropsWithChildren<{}>) => {
+  const [currentGame, setCurrentGame] = useState<Game>(getInitialState());
+  const [games, setGames] = useState<Game[]>(() => {
+    const gamesStr = localStorage.getItem('games');
+    return gamesStr ? JSON.parse(gamesStr) : [currentGame];
+  });
+
+  const addGame = (game: Game) => {
+    const updatedGames = [...games, game];
+    setGames(updatedGames);
+    setCurrentGame(game);
+    saveGameToLocalStorage(game, updatedGames);
+  };
+
+  const updateGame = (updatedGame: Game) => {
+    const updatedGames = games.map(game => 
+      game.id === updatedGame.id ? updatedGame : game
     );
+    setGames(updatedGames);
+    setCurrentGame(updatedGame);
+    saveGameToLocalStorage(updatedGame, updatedGames);
+  };
+
+  const deleteGame = (id: string) => {
+    const updatedGames = games.filter(game => game.id !== id);
+    setGames(updatedGames);
+    if (currentGame.id === id) {
+      setCurrentGame(updatedGames[updatedGames.length - 1]);
+    }
+    saveGameToLocalStorage(currentGame, updatedGames);
+  };
+
+  const location = useLocation();
+
+  // Update localStorage whenever current game changes
+  useEffect(() => {
+    const updatedGames = games.map(game =>
+      game.id === currentGame.id ? currentGame : game
+    );
+    setGames(updatedGames);
+    saveGameToLocalStorage(currentGame, updatedGames);
+  }, [currentGame, location]);
+
+  return (
+    <GameContext.Provider value={{
+      currentGame,
+      setCurrentGame,
+      games,
+      addGame,
+      updateGame,
+      deleteGame
+    }}>
+      {children}
+    </GameContext.Provider>
+  );
 };
 
 export const useGameContext = () => useContext(GameContext);
+
 export default GameContextProvider;

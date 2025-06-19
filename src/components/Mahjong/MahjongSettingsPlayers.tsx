@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext } from '../../contexts/GameContext';
 import { useMahjongSettingsContext } from '../../contexts/MahjongSettingsContext';
 
 function MahjongSettingsPlayers() {
-  const { gameType, title, players, setPlayers, currDealer, setCurrDealer } = useGameContext();
+const { currentGame, setCurrentGame, addGame } = useGameContext();
   const { 
     startingPlayerScore,
     setStartingPlayerScore,
@@ -43,7 +42,7 @@ function MahjongSettingsPlayers() {
 
    return (
     <div className="container">
-      <h1 className="title">{gameType} Settings ({title})</h1>
+      <h1 className="title">{currentGame.gameType} Settings ({currentGame.title})</h1>
       <div>
         <label>
             <span className='mahjong-tile'>&#x1F001;</span>
@@ -51,8 +50,11 @@ function MahjongSettingsPlayers() {
             <input 
               className='mahjong-tile-input'
               name="southNameInput"
-              defaultValue={players[3] || 'P4'}
-              onChange={e => setPlayers([players[0], players[1], players[2], e.target.value])}
+              defaultValue={currentGame.players[3] || 'P4'}
+              onChange={e => setCurrentGame({
+                ...currentGame,
+                players: [currentGame.players[0], currentGame.players[1], currentGame.players[2], e.target.value]
+              })}
               onClick={e => e.currentTarget.select()} />
         </label>
       </div>
@@ -72,8 +74,11 @@ function MahjongSettingsPlayers() {
           <input
             className='mahjong-tile-input'
             name="westNameInput"
-            defaultValue={players[2] || 'P3'}
-            onChange={e => setPlayers([players[0], players[1], e.target.value, ...players.slice(3)])}
+            defaultValue={currentGame.players[2] || 'P3'}
+            onChange={e => setCurrentGame({
+              ...currentGame,
+              players: [currentGame.players[0], currentGame.players[1], e.target.value, ...currentGame.players.slice(3)]
+            })}
             onClick={e => e.currentTarget.select()}
           />
         </label>
@@ -84,8 +89,11 @@ function MahjongSettingsPlayers() {
           <input
             className='mahjong-tile-input'
             name="eastNameInput"
-            defaultValue={players[0] || 'P1'}
-            onChange={e => setPlayers([e.target.value, ...players.slice(1)])}
+            defaultValue={currentGame.players[0] || 'P1'}
+            onChange={e => setCurrentGame({
+              ...currentGame,
+              players: [e.target.value, ...currentGame.players.slice(1)]
+            })}
             onClick={e => e.currentTarget.select()}
           />
         </label>
@@ -98,8 +106,11 @@ function MahjongSettingsPlayers() {
             <input 
               className='mahjong-tile-input'
               name="northNameInput"
-              defaultValue={players[1] || 'P2'}
-              onChange={e => setPlayers([players[0], e.target.value, ...players.slice(2)])}
+              defaultValue={currentGame.players[1] || 'P2'}
+              onChange={e => setCurrentGame({
+                ...currentGame,
+                players: [currentGame.players[0], e.target.value, ...currentGame.players.slice(2)]
+              })}
               onClick={e => e.currentTarget.select()} />
         </label>
       </div>

@@ -5,7 +5,7 @@ import { gameTypes, useGameContext } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgSettings() {
-  const { gameType, title, players, setPlayers, currDealer, setCurrDealer } = useGameContext();
+  const { currentGame, setCurrentGame, addGame } = useGameContext();
   const { 
     showRowNums, 
     setShowRowNums, 
@@ -18,28 +18,34 @@ function ProgSettings() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("url changed");
   }, [location]);
 
   const handlePlayersChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPlayers = Number(e.target.value);
     const playersArray = Array.from({ length: selectedPlayers }, (_, i) => `P${i + 1}`);
-    setPlayers(playersArray);
+    
+    setCurrentGame({
+      ...currentGame,
+      players: playersArray
+    });
   };
 
   const handleStartClick = () => {
     // Workaround to set starting row for Simple Scoresheet
-    if (gameType === gameTypes[0]) {
+    if (currentGame.gameType === gameTypes[0]) {
       setStartingRowNum(1);
     }
-    setCurrDealer(players[0]); // Set the first player as the current dealer
-    console.log(`handleStartClick - players: ${players}, currDealer: ${currDealer}`);
+    setCurrentGame({
+      ...currentGame,
+      currDealer: currentGame.players[0]
+    }); // Set the first player as the current dealer
+    console.log(`handleStartClick - players: ${currentGame.players}, currDealer: ${currentGame.currDealer}`);
     navigate('/prog-scoresheet');
   };
 
   return (
     <div className='container'>
-      <h1 className="title">{gameType} Settings ({title})</h1>
+      <h1 className="title">{currentGame.gameType} Settings ({currentGame.title})</h1>
       <div className="settings-group">
         <div className="setting-row">
           <div className="setting-label">
@@ -48,7 +54,7 @@ function ProgSettings() {
           <div className="setting-control">
             <select 
               className='setting-dropdown'
-              value={players.length}
+              value={currentGame.players.length}
               onChange={handlePlayersChange}>
               <option value="3">3</option>
               <option value="4">4</option>
@@ -82,7 +88,7 @@ function ProgSettings() {
               onChange={e => setShowRowNums(e.target.checked)} />
           </div>
         </div>
-        { showRowNums && gameType === gameTypes[1] &&
+        { showRowNums && currentGame.gameType === gameTypes[1] &&
           <div className="setting-row">
             <div className="setting-label">
               STARTING ROW NUMBER
