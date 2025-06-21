@@ -18,7 +18,7 @@ function ProgSettings() {
   const handlePlayersChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPlayers = Number(e.target.value);
     const playersArray = Array.from({ length: selectedPlayers }, (_, i) => `P${i + 1}`);
-    const scoresArray: [number, number[]][] = Array.from({ length: selectedPlayers }, (_, i) => [i, [0]]);
+    const scoresArray: [number][] = Array.from({ length: selectedPlayers }, () => [0]);
     
     setCurrentGame({
       ...currentGame,
