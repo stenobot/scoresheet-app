@@ -31,23 +31,38 @@ function ProgScoresheet() {
   const rowNumRef = useRef(0);
   const rowNumDoubleTwelveRuleAppliedRef = useRef(false);
 
+  const roundDescriptions = [
+    '2 sets',
+    '1 run, 1 set',
+    '2 runs',
+    '3 sets',
+    '1 run, 2 sets',
+    '2 runs, 1 set',
+    '3 runs',
+    '4 sets',
+    '1 run, 3 sets',
+    '2 runs, 2 sets',
+    '3 runs, 1 set'
+  ]
+
   /// <summary>
   ///   Adds a new row and other functions when Next Round button is clicked.
   /// </summary>
   const handleNextRoundClicked = () => {
-        setCurrentGame({
-      ...currentGame,
-      currRound: currentGame.currRound + 1
-    });
-    const currDealer = currentGame.players[currentGame.currRound % currentGame.players.length];
+    const newRound = currentGame.currRound + 1;
+    const newDealer = currentGame.players[currentGame.currRound % currentGame.players.length];
+    
     setCurrentGame({
       ...currentGame,
-      currDealer: currDealer
+      currRound: newRound,
+      currDealer: newDealer
     });
-    console.log(`handleNextRoundClicked - players: ${currentGame.players}, currDealer: ${currDealer}`);
+
+    //console.log(`handleNextRoundClicked - players: ${currentGame.players}, currDealer: ${currentGame.currDealer}, currRound: ${currentGame.currRound}`);
     addTableRow();
     handleCellChanged();
-    const dealerIndex = currentGame.players.indexOf(currDealer);
+    const dealerIndex = currentGame.players.indexOf(newDealer);
+    console.log(`handleNextRoundClicked - dealerIndex: ${dealerIndex}, newDealer: ${newDealer}, currDealer: ${currentGame.currDealer}`);
     highlightDealerColumn(dealerIndex);
   }
 
@@ -327,8 +342,14 @@ function ProgScoresheet() {
         className={ showRowNums ? 'table-with-row-nums' : 'table-no-row-nums' }>
         <caption>
           <h2 className={ showRowNums ? 'title-with-row-nums' : 'title-no-row-nums' }>{currentGame.title}</h2>
-          <h6 className={ showRowNums ? 'subtitle-with-row-nums' : 'subtitle-no-row-nums' }>Round {currentGame.currRound}</h6>
-        </caption>
+          <h6 className={ showRowNums ? 
+            'subtitle-with-row-nums' : 
+            'subtitle-no-row-nums' }>
+              <span>
+                {roundDescriptions[currentGame.currRound - 1]}
+              </span>
+            </h6>
+          </caption>
         <thead style={{ padding: '5px' }}>
           <tr id="theadtrow">
             { showRowNums === false ? 
