@@ -56,26 +56,43 @@ const navigate = useNavigate();
             onClick={() => handleGameClick(game)}
             className='list-button'
             aria-pressed={currentGame.id === game.id}>
-            {game.gameType} - {game.title}
+            {game.gameType} - {game.title} - {game.id && (
+    <>
+      {' '}
+      <span style={{ fontSize: '0.85em', color: '#bbb' }}>
+        {(() => {
+          // If your game.id is a timestamp or starts with one, parse it:
+          const timestamp = Number(game.id.split('_')[0]);
+          if (!isNaN(timestamp)) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString();
+          }
+          return '';
+        })()}
+      </span>
+    </>
+  )}
           </button>
         ))}
       </div>
       <label>
-        <div>
-          <PrimaryButton onClick={handleLoadClick}>
+        <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
+          <button
+            style={{ flex: 1 }}
+            className="primary-button"
+            onClick={handleLoadClick}>
             Load
-          </PrimaryButton>
-        </div>
-      </label>
-      <label>
-        <div>
-          <PrimaryButton onClick={handleDeleteClick}>
+          </button>
+          <button
+            style={{ flex: 1 }}
+            className="danger-button"
+            onClick={handleDeleteClick}>
             Delete
-          </PrimaryButton>
+          </button>
         </div>
       </label>
       <label>
-        <div style={{marginTop: 20}}>
+        <div style={{marginTop: 10}}>
           <a className='link' onClick={handleHomeClick}>Home</a>
         </div>
       </label>

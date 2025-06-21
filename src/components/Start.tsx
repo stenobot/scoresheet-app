@@ -6,7 +6,7 @@ import { generateId } from '../utils/Utils';
 
 function Start() {
   const navigate = useNavigate();
-  const { addGame } = useGameContext();
+  const { addGame, games } = useGameContext();
 
   const [newGame, setNewGame] = useState<Game>({
     id: generateId(),
@@ -17,6 +17,8 @@ function Start() {
     currDealer: 'P1',
     settings: ''
   });
+
+  const isGameLoadData = games && games.length > 0;
 
   const handleNewClick = () => {
     addGame(newGame);
@@ -72,13 +74,15 @@ function Start() {
           </PrimaryButton>
         </div>
       </label>
-      <label>
-        <div>
-          <PrimaryButton onClick={handleLoadClick}>
-            Load Game
-          </PrimaryButton>
-        </div>
-      </label>
+      {isGameLoadData &&
+        <label>
+          <div>
+            <PrimaryButton onClick={handleLoadClick}>
+              Load Game
+            </PrimaryButton>
+          </div>
+        </label>
+      }
     </div>
   );
 }

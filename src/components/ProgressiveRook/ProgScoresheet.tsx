@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext, gameTypes } from '../../contexts/GameContext';
@@ -10,6 +11,8 @@ function ProgScoresheet() {
     showRowNums, 
     startingRowNum, 
     showColTotals } = useProgSettingsContext();
+
+  const navigate = useNavigate();
 
   // initial column totals values to set below arrays
   const initialColTotals = Array.from(currentGame.players.keys()).map( () => 0);
@@ -301,6 +304,10 @@ function ProgScoresheet() {
     }
   }
 
+  const handleHomeClick = () => {
+    navigate('/');
+  }
+
   useEffect(() => {
     if (didMountRef.current === false) {
       // only fire once when page loads
@@ -373,6 +380,11 @@ function ProgScoresheet() {
           Next Round
         </PrimaryButton>
       </div>
+      <label>
+        <div style={{marginTop: 10}}>
+          <a className='link' onClick={handleHomeClick}>Home</a>
+        </div>
+      </label>
       {/* <p style={{ color: '#70aacb', fontSize: '20px'}}>(<kbd>Double-click</kbd> row to delete)</p> */}
     </div>
   );
