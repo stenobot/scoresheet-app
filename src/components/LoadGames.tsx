@@ -56,22 +56,22 @@ const navigate = useNavigate();
             onClick={() => handleGameClick(game)}
             className='list-button'
             aria-pressed={currentGame.id === game.id}>
-            {game.gameType} - {game.title} - {game.id && (
-    <>
-      {' '}
-      <span style={{ fontSize: '0.85em', color: '#bbb' }}>
-        {(() => {
-          // If your game.id is a timestamp or starts with one, parse it:
-          const timestamp = Number(game.id.split('_')[0]);
-          if (!isNaN(timestamp)) {
-            const date = new Date(timestamp);
-            return date.toLocaleDateString();
-          }
-          return '';
-        })()}
-      </span>
-    </>
-  )}
+              {game.gameType} - {game.title} - {game.id && (
+              <>
+                {' '}
+                <span style={{ fontSize: '0.85em', color: '#bbb' }}>
+                  {(() => {
+                    // If your game.id is a timestamp or starts with one, parse it:
+                    const timestamp = Number(game.id.split('_')[0]);
+                    if (!isNaN(timestamp)) {
+                      const date = new Date(timestamp);
+                      return date.toLocaleDateString();
+                    }
+                    return '';
+                  })()}
+                </span>
+              </>
+            )}
           </button>
         ))}
       </div>
