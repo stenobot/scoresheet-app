@@ -58,12 +58,26 @@ function ProgScoresheet() {
       currDealer: newDealer
     });
 
-    //console.log(`handleNextRoundClicked - players: ${currentGame.players}, currDealer: ${currentGame.currDealer}, currRound: ${currentGame.currRound}`);
     addTableRow();
     handleCellChanged();
     const dealerIndex = currentGame.players.indexOf(newDealer);
-    console.log(`handleNextRoundClicked - dealerIndex: ${dealerIndex}, newDealer: ${newDealer}, currDealer: ${currentGame.currDealer}`);
+    //console.log(`handleNextRoundClicked - newRound: ${newRound}, newDealer: ${newDealer}, currRound: ${currentGame.currRound}, currDealer: ${currentGame.currDealer}, players: ${currentGame.players}`);
     highlightDealerColumn(dealerIndex);
+  }
+
+  /// <summary>
+  ///   End the game by freezing the input cells, declaring the winner, and hiding this button
+  /// </summary>
+  const handleEndGameClicked = () => {
+    setCurrentGame({
+      ...currentGame,
+      isGameOver: true,
+    });
+
+    // Feed an index that is way out of bounds to remove all highlighting
+    highlightDealerColumn(99);
+    
+    // TODO: calculate and set current leader based on scores
   }
 
   /// <summary>
@@ -345,9 +359,10 @@ function ProgScoresheet() {
           <h6 className={ showRowNums ? 
             'subtitle-with-row-nums' : 
             'subtitle-no-row-nums' }>
-              <span>
-                {roundDescriptions[currentGame.currRound - 1]}
-              </span>
+              {currentGame.isGameOver ?
+                <div>{currentGame.currLeader} is the winner!</div> : 
+                <div>{roundDescriptions[currentGame.currRound - 1]}</div>
+              }
             </h6>
           </caption>
         <thead style={{ padding: '5px' }}>
@@ -355,10 +370,11 @@ function ProgScoresheet() {
             { showRowNums === false ? 
                 Array.from(currentGame.players.keys()).map( i => 
                   <th 
-                  contentEditable 
-                  suppressContentEditableWarning={true} 
-                  spellCheck={false} key={i} 
-                  className={getTableHeaderClass()}>{currentGame.players[i]}</th>
+                    contentEditable 
+                    suppressContentEditableWarning={true} 
+                    spellCheck={false} key={i} 
+                    className={getTableHeaderClass()}>{currentGame.players[i]}
+                  </th>
                 ) : 
                 Array.from(Array(currentGame.players.length + 1).keys()).map( i => {
                   return i === 0 ?
@@ -396,11 +412,20 @@ function ProgScoresheet() {
           </tfoot>
         }
       </table>
-      <div style={{ marginTop: '0.7em' }}>
-        <PrimaryButton onClick={handleNextRoundClicked}>
-          Next Round
-        </PrimaryButton>
-      </div>
+      { currentGame.isGameOver ?
+      <div className='subtitle-no-row-nums'>The game has ended</div> :
+        currentGame.currRound == 11 ? 
+          <div style={{ marginTop: '0.7em' }}>
+            <PrimaryButton onClick={handleEndGameClicked}>
+              End Game
+            </PrimaryButton>
+          </div> : 
+          <div style={{ marginTop: '0.7em' }}>
+            <PrimaryButton onClick={handleNextRoundClicked}>
+              Next Round
+            </PrimaryButton>
+          </div>
+      }
       <label>
         <div style={{marginTop: 10}}>
           <a className='link' onClick={handleHomeClick}>Home</a>

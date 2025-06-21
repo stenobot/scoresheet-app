@@ -15,6 +15,8 @@ function Start() {
     currRound: 1,
     players: ['P1', 'P2', 'P3', 'P4'],
     currDealer: 'P1',
+    currLeader: 'P1',
+    isGameOver: false,
     settings: ''
   });
 
