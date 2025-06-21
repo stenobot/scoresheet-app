@@ -16,6 +16,7 @@ export interface Game {
   gameType: GameType;
   currRound: number;
   players: string[];
+  scores: [number, number[]][];
   currDealer: string;
   currLeader: string;
   isGameOver: boolean;
@@ -34,6 +35,12 @@ const getInitialState = () => {
       gameType: GameType.ProgressiveRook,
       currRound: 1,
       players: ['P1', 'P2', 'P3', 'P4'],
+      scores: [
+        [0, [0]],
+        [1, [0]],
+        [2, [0]],
+        [3, [0]],
+      ],
       currDealer: 'P1',
       currLeader: 'P1',
       isGameOver: false,

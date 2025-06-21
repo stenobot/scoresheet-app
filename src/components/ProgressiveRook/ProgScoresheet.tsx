@@ -74,9 +74,9 @@ function ProgScoresheet() {
       isGameOver: true,
     });
 
-    // Feed an index that is way out of bounds to remove all highlighting
+    // Feed dealer index that is way out of bounds to remove all highlighting
     highlightDealerColumn(99);
-    
+
     // TODO: calculate and set current leader based on scores
   }
 
@@ -355,16 +355,14 @@ function ProgScoresheet() {
       <table
         className={ showRowNums ? 'table-with-row-nums' : 'table-no-row-nums' }>
         <caption>
-          <h2 className={ showRowNums ? 'title-with-row-nums' : 'title-no-row-nums' }>{currentGame.title}</h2>
-          <h6 className={ showRowNums ? 
-            'subtitle-with-row-nums' : 
-            'subtitle-no-row-nums' }>
-              {currentGame.isGameOver ?
-                <div>{currentGame.currLeader} is the winner!</div> : 
-                <div>{roundDescriptions[currentGame.currRound - 1]}</div>
-              }
-            </h6>
-          </caption>
+          <h2 style={{marginLeft: showColTotals ? 22 : 0}} className='table-title'>{currentGame.title}</h2>
+          <h6 style={{marginLeft: showColTotals ? 22 : 0}} className='table-subtitle'>
+            {currentGame.isGameOver ?
+              <div>{currentGame.currLeader} is the winner!</div> : 
+              <div>{roundDescriptions[currentGame.currRound - 1]}</div>
+            }
+          </h6>
+        </caption>
         <thead style={{ padding: '5px' }}>
           <tr id="theadtrow">
             { showRowNums === false ? 
@@ -412,25 +410,27 @@ function ProgScoresheet() {
           </tfoot>
         }
       </table>
-      { currentGame.isGameOver ?
-      <div className='subtitle-no-row-nums'>The game has ended</div> :
-        currentGame.currRound == 11 ? 
-          <div style={{ marginTop: '0.7em' }}>
-            <PrimaryButton onClick={handleEndGameClicked}>
-              End Game
-            </PrimaryButton>
-          </div> : 
-          <div style={{ marginTop: '0.7em' }}>
-            <PrimaryButton onClick={handleNextRoundClicked}>
-              Next Round
-            </PrimaryButton>
+      <div style={{marginLeft: showColTotals ? 22 : 0}}>
+        { currentGame.isGameOver ?
+          <div className='table-subtitle'>The game has ended</div> :
+            currentGame.currRound == 11 ? 
+              <div style={{ marginTop: '0.7em' }}>
+                <PrimaryButton onClick={handleEndGameClicked}>
+                  End Game
+                </PrimaryButton>
+              </div> : 
+              <div style={{ marginTop: '0.7em' }}>
+                <PrimaryButton onClick={handleNextRoundClicked}>
+                  Next Round
+                </PrimaryButton>
+              </div>
+        }
+        <label>
+          <div style={{marginTop: 10}}>
+            <a className='link' onClick={handleHomeClick}>Home</a>
           </div>
-      }
-      <label>
-        <div style={{marginTop: 10}}>
-          <a className='link' onClick={handleHomeClick}>Home</a>
-        </div>
-      </label>
+        </label>
+      </div>
       {/* <p style={{ color: '#70aacb', fontSize: '20px'}}>(<kbd>Double-click</kbd> row to delete)</p> */}
     </div>
   );
