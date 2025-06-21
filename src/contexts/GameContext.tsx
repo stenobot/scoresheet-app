@@ -17,6 +17,8 @@ export interface Game {
   currRound: number;
   players: string[];
   currDealer: string;
+  currLeader: string;
+  isGameOver: boolean;
   settings: string;
 }
 
@@ -33,6 +35,8 @@ const getInitialState = () => {
       currRound: 1,
       players: ['P1', 'P2', 'P3', 'P4'],
       currDealer: 'P1',
+      currLeader: 'P1',
+      isGameOver: false,
       settings: ''
     };
     games.push(initialGame);
