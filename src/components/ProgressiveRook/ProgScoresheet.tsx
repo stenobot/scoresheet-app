@@ -4,7 +4,7 @@ import { useGameContext, gameTypes } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgScoresheet() { 
-  const { currentGame, setCurrentGame, addGame } = useGameContext();
+  const { currentGame, setCurrentGame } = useGameContext();
 
   const { 
     showRowNums, 

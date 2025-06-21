@@ -10,7 +10,7 @@ function Start() {
 
   const [newGame, setNewGame] = useState<Game>({
     id: generateId(),
-    title: 'New Game',
+    title: 'My Game',
     gameType: GameType.ProgressiveRook,
     currRound: 1,
     players: ['P1', 'P2', 'P3', 'P4'],
@@ -30,6 +30,10 @@ function Start() {
         navigate('/mahjong-settings-players');
         break;
     }
+  }
+
+  const handleLoadClick = () => {
+    navigate('/load-games');
   }
 
   return (
@@ -65,6 +69,13 @@ function Start() {
         <div>
           <PrimaryButton onClick={handleNewClick}>
             New Game
+          </PrimaryButton>
+        </div>
+      </label>
+      <label>
+        <div>
+          <PrimaryButton onClick={handleLoadClick}>
+            Load Game
           </PrimaryButton>
         </div>
       </label>

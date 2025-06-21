@@ -333,6 +333,16 @@ select:hover {
     border-color: #63b3ed;
 }
 
+.link {
+  font-family: 'm5x7', monospace; 
+  color: #3182ce;
+  font-size: 30px;
+}
+
+.link:hover {
+  cursor: pointer;
+}
+
 .primary-button {
   font-family: 'm5x7', monospace;
   background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
@@ -356,6 +366,37 @@ select:hover {
 
 .primary-button:active {
   transform: translateY(0);
+}
+
+.list-button {
+  background: linear-gradient(135deg, #63839c 0%, #46637e 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 20px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
+  margin-top: 10px;
+}
+
+.list-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(66, 153, 225, 0.4);
+}
+
+.list-button:active {
+  transform: translateY(0);
+}
+
+.list-button[aria-pressed="true"] {
+  background-color: #4a90e2;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+  transform: scale(1.02);
 }
 
 @media (max-width: 590px) {
@@ -468,6 +509,10 @@ select:hover {
     width: 100%;
     padding: 10px;
     font-size: 32px;
+  }
+
+  .list-button {
+    width: 100%;
   }
 }
 

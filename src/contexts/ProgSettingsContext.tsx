@@ -1,5 +1,11 @@
 import {createContext, useState, PropsWithChildren, useContext} from 'react';
 
+export interface ProgSettings {
+  showRowNums: boolean;
+  startingRowNum: number;
+  showColTotals: boolean;
+}
+
 const ProgSettingsContext = createContext({
     showRowNums: false,
     setShowRowNums: (showRowNums: boolean) => {},

@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
 import { gameTypes, useGameContext } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgSettings() {
-  const { currentGame, setCurrentGame, addGame } = useGameContext();
+  const { currentGame, setCurrentGame, games } = useGameContext();
   const { 
     showRowNums, 
     setShowRowNums, 
@@ -15,10 +14,6 @@ function ProgSettings() {
     setShowColTotals } = useProgSettingsContext();
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-  }, [location]);
 
   const handlePlayersChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPlayers = Number(e.target.value);
@@ -29,17 +24,27 @@ function ProgSettings() {
       players: playersArray
     });
   };
-
   const handleStartClick = () => {
     // Workaround to set starting row for Simple Scoresheet
     if (currentGame.gameType === gameTypes[0]) {
       setStartingRowNum(1);
     }
+
+    // Create settings object
+    const progSettings = {
+      showRowNums,
+      startingRowNum,
+      showColTotals
+    };
+
+    // Set current game with settings and first player as dealer
     setCurrentGame({
       ...currentGame,
+      settings: JSON.stringify(progSettings),
       currDealer: currentGame.players[0]
-    }); // Set the first player as the current dealer
-    console.log(`handleStartClick - players: ${currentGame.players}, currDealer: ${currentGame.currDealer}`);
+    });
+
+    console.log(`handleStartClick - settings saved: ${JSON.stringify(progSettings)}`);
     navigate('/prog-scoresheet');
   };
 

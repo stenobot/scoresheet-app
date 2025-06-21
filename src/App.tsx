@@ -9,6 +9,7 @@ import GameContextProvider from './contexts/GameContext';
 import ProgSettingsContextProvider from './contexts/ProgSettingsContext';
 import MahjongSettingsContextProvider from './contexts/MahjongSettingsContext';
 import MahjongScoresheet from './components/Mahjong/MahjongScoresheet';
+import LoadGames from './components/LoadGames';
 
 export enum Preset {
   None = 'none',
@@ -61,6 +62,11 @@ function App() {
                 </MahjongSettingsContextProvider>
               </GameContextProvider>
             } />
+          <Route path="/load-games" element={
+            <GameContextProvider>
+              <LoadGames />
+            </GameContextProvider>  
+          } />
       </Routes>
     </Router>
   );
