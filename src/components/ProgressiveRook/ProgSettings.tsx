@@ -43,10 +43,14 @@ function ProgSettings() {
       settings: JSON.stringify(progSettings),
       currDealer: currentGame.players[0]
     });
-
+    
     console.log(`handleStartClick - settings saved: ${JSON.stringify(progSettings)}`);
     navigate('/prog-scoresheet');
   };
+
+  const handleHomeClick = () => {
+    navigate('/');
+  }
 
   return (
     <div className='container'>
@@ -120,6 +124,12 @@ function ProgSettings() {
           Start Game
         </PrimaryButton>
       </div>
+
+      <label>   
+        <div style={{marginTop: 10}}>
+          <a className='link' onClick={handleHomeClick}>Home</a>
+        </div>
+      </label>
     </div>
   );
 }

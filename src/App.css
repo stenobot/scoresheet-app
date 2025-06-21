@@ -368,6 +368,31 @@ select:hover {
   transform: translateY(0);
 }
 
+.danger-button {
+  font-family: 'm5x7', monospace;
+  background: linear-gradient(135deg, #742628 0%, #5e0d0d 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(119, 31, 31, 0.3);
+  margin-top: 20px;
+}
+
+.danger-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(66, 153, 225, 0.4);
+}
+
+.danger-button:active {
+  transform: translateY(0);
+}
+
 .list-button {
   background: linear-gradient(135deg, #63839c 0%, #46637e 100%);
   color: white;
