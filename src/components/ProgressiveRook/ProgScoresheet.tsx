@@ -16,9 +16,12 @@ function ProgScoresheet() {
 
   // initial column totals values to set below arrays
   const initialColTotals = Array.from(currentGame.players.keys()).map( () => 0);
+    
+
   // create 2d array for all cell values, 
   // as a source of truth when we column totals
   const [rowsValues, setRowsValues] = useState([initialColTotals]);
+
   // create array of column totals for the footer
   const [footerValues, setFooterValues] = useState(
     // if show row numbers is selected, add extra blank "" element for row number label column 
@@ -26,6 +29,8 @@ function ProgScoresheet() {
     // this variable extra element also needs to be accounted for when array is updated
     showRowNums ? ["", ...initialColTotals] : initialColTotals
   );
+
+  console.log(`FUNC PARENT: currentGame.scores: ${currentGame.scores}, rowsValues: ${rowsValues}`);
 
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
@@ -63,6 +68,9 @@ function ProgScoresheet() {
     const dealerIndex = currentGame.players.indexOf(newDealer);
     //console.log(`handleNextRoundClicked - newRound: ${newRound}, newDealer: ${newDealer}, currRound: ${currentGame.currRound}, currDealer: ${currentGame.currDealer}, players: ${currentGame.players}`);
     highlightDealerColumn(dealerIndex);
+
+      console.log(`handleNextRoundClicked: initColTotals: ${initialColTotals}, currentGame.scores: ${currentGame.scores}, footerValues: ${footerValues} `);
+
   }
 
   /// <summary>
@@ -104,12 +112,15 @@ function ProgScoresheet() {
                 continue;
               }
               td.className = 'normal-cell';
-              const  cellValue = Number(td.innerHTML);
+
+              const cellValue = Number(td.innerHTML);
               // ...and it's different from corresponding 2d array value...
               if (rowsValues[i] && cellValue !== rowsValues[i][j]) {
                 // ...update 2d array with current cell value
                 rowsValues[i][j] = cellValue;
               }
+
+              console.log(`handleCellChanged LOOP: currentGame.scores: ${currentGame.scores}, rowsValues: ${rowsValues}, cellValue: ${cellValue}`);
             }
             else {
               // cell's value is not a number
@@ -119,7 +130,7 @@ function ProgScoresheet() {
         }
       }
     }
-    console.log(`handleCellChanged End - rowsValues.length: ${rowsValues.length}`);
+    console.log(`handleCellChanged END - rowsValues.length: ${rowsValues.length}`);
     const nextFooterValues = sumColumnsArray(rowsValues);
     setFooterValues(nextFooterValues);
   }
@@ -215,6 +226,8 @@ function ProgScoresheet() {
 
     // initialize new row in 2d array to zeros
     setRowsValues([...rowsValues, initialColTotals]);
+
+    console.log(`addTableRow: currentGame.scores: ${currentGame.scores}, rowsValues: ${rowsValues}`);
   }
 
   /// <summary>
@@ -280,8 +293,8 @@ function ProgScoresheet() {
   /// <returns>1D array of column totals</returns>
   const sumColumnsArray = (rowsValues: number[][]) => {
     const sumColumnsValues: number[] = [];
-    console.log(`sumColumnsArray - rowsValues: ${rowsValues}`);
-    console.log(`sumColumnsArray - rowsValues.length: ${rowsValues.length}`);
+    //console.log(`sumColumnsArray - rowsValues: ${rowsValues}`);
+    //console.log(`sumColumnsArray - rowsValues.length: ${rowsValues.length}`);
     rowsValues.map((row, i) => {
       if (i === 0) {
         // Workaround for weird bug where first row of 2d array gets added twice.
