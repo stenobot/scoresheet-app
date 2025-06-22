@@ -16,7 +16,7 @@ export interface Game {
   gameType: GameType;
   currRound: number;
   players: string[];
-  scores: [number][];
+  scores: number[][];
   currDealer: string;
   currLeader: string;
   isGameOver: boolean;
@@ -36,10 +36,10 @@ const getInitialState = () => {
       currRound: 1,
       players: ['P1', 'P2', 'P3', 'P4'],
       scores: [
-        [0],
-        [0],
-        [0],
-        [0],
+        [],
+        [],
+        [],
+        [],
       ],
       currDealer: 'P1',
       currLeader: 'P1',

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
-import { useGameContext, gameTypes } from '../../contexts/GameContext';
+import { useGameContext, gameTypes, Game } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgScoresheet() { 
@@ -18,19 +18,12 @@ function ProgScoresheet() {
   const initialColTotals = Array.from(currentGame.players.keys()).map( () => 0);
     
 
-  // create 2d array for all cell values, 
-  // as a source of truth when we column totals
-  const [rowsValues, setRowsValues] = useState([initialColTotals]);
-
   // create array of column totals for the footer
   const [footerValues, setFooterValues] = useState(
     // if show row numbers is selected, add extra blank "" element for row number label column 
     // to beginning of initial array to ensure that array.map to UI works correctly.
     // this variable extra element also needs to be accounted for when array is updated
-    showRowNums ? ["", ...initialColTotals] : initialColTotals
-  );
-
-  console.log(`FUNC PARENT: currentGame.scores: ${currentGame.scores}, rowsValues: ${rowsValues}`);
+    showRowNums ? ["", ...initialColTotals] : initialColTotals);
 
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
@@ -57,20 +50,20 @@ function ProgScoresheet() {
     const newRound = currentGame.currRound + 1;
     const newDealer = currentGame.players[currentGame.currRound % currentGame.players.length];
     
+    // Create a new scores array with an additional empty array for the new round
+    const newScores = currentGame.scores.map(playerScores => [...playerScores, 0]);
+
     setCurrentGame({
       ...currentGame,
       currRound: newRound,
-      currDealer: newDealer
+      currDealer: newDealer,
+      scores: newScores
     });
 
-    addTableRow();
-    handleCellChanged();
+    addTableRow(newRound - 1);
     const dealerIndex = currentGame.players.indexOf(newDealer);
-    //console.log(`handleNextRoundClicked - newRound: ${newRound}, newDealer: ${newDealer}, currRound: ${currentGame.currRound}, currDealer: ${currentGame.currDealer}, players: ${currentGame.players}`);
     highlightDealerColumn(dealerIndex);
-
-      console.log(`handleNextRoundClicked: initColTotals: ${initialColTotals}, currentGame.scores: ${currentGame.scores}, footerValues: ${footerValues} `);
-
+    highlightCurrentRoundRow(newRound);
   }
 
   /// <summary>
@@ -96,43 +89,41 @@ function ProgScoresheet() {
   const handleCellChanged = () => {
     const tBody = document.getElementById('tbody');
     const tRows = tBody?.getElementsByTagName('tr');
-    if (tRows) {
+    if (tRows && tRows.length > 0) {
+      const newScores: number[][] = Array.from({ length: currentGame.players.length }, () => []);
+
       // loop through rows
       for (let i = 0; i < tRows.length; i++) {
         const row = tRows[i];
         const cells = row.getElementsByTagName('td');
         if (cells) {
           // loop through cells
-          for (let j = 0; j < cells.length; j++) {
+          const playerOffset = showRowNums ? 1 : 0;
+          for (let j = playerOffset; j < cells.length; j++) {
             const td = cells[j];
+            const playerIndex = j - playerOffset;
+
             // if cell's value is a number...
             if (Number.isInteger(Number(td.innerHTML))) {
-              if (showRowNums && j === 0) {
-                // cell is row number label, no-op
-                continue;
-              }
-              td.className = 'normal-cell';
-
+              td.classList.add('normal-cell');
+              td.classList.remove('normal-cell-bad-input');
               const cellValue = Number(td.innerHTML);
-              // ...and it's different from corresponding 2d array value...
-              if (rowsValues[i] && cellValue !== rowsValues[i][j]) {
-                // ...update 2d array with current cell value
-                rowsValues[i][j] = cellValue;
-              }
-
-              console.log(`handleCellChanged LOOP: currentGame.scores: ${currentGame.scores}, rowsValues: ${rowsValues}, cellValue: ${cellValue}`);
+              newScores[playerIndex][i] = cellValue;
             }
             else {
               // cell's value is not a number
-              td.className = 'normal-cell-bad-input';
+              td.classList.add('normal-cell-bad-input');
+              td.classList.remove('normal-cell');
             }
           }
         }
       }
+
+      setCurrentGame({
+        ...currentGame,
+        scores: newScores
+      });
     }
-    console.log(`handleCellChanged END - rowsValues.length: ${rowsValues.length}`);
-    const nextFooterValues = sumColumnsArray(rowsValues);
-    setFooterValues(nextFooterValues);
   }
 
   const highlightDealerColumn = (dealerIndex: number) => { 
@@ -162,6 +153,30 @@ function ProgScoresheet() {
     }
   }
 
+  const highlightCurrentRoundRow = (roundNumber: number) => {
+    const tBody = document.getElementById('tbody');
+    const tRows = tBody?.getElementsByTagName('tr');
+    if (tRows) {
+      // Clear existing highlights from all cells in all rows
+      for (let i = 0; i < tRows.length; i++) {
+        const cells = tRows[i].getElementsByTagName('td');
+        for (let j = 0; j < cells.length; j++) {
+          cells[j].classList.remove('current-round-highlight');
+        }
+      }
+
+      // Highlight cells in the current round's row
+      const rowIndex = roundNumber - 1;
+      if (rowIndex >= 0 && rowIndex < tRows.length) {
+        const cellsToHighlight = tRows[rowIndex].getElementsByTagName('td');
+        const startIndex = showRowNums ? 1 : 0;
+        for (let j = startIndex; j < cellsToHighlight.length; j++) {
+          cellsToHighlight[j].classList.add('current-round-highlight');
+        }
+      }
+    }
+  }
+
   /// <summary>
   ///   Deletes a row when it's double-clicked.
   ///  (Not currently used.)
@@ -179,7 +194,7 @@ function ProgScoresheet() {
   /// <summary>
   ///   Adds a new row with editable cells to the table.
   /// </summary>
-  const addTableRow = () => {
+  const addTableRow = (roundIndex?: number) => {
     //console.log(`addTableRow start - rowsValues.length: ${rowsValues.length}`);
     const tBody = document.getElementById('tbody');
     const trBody = document.createElement('tr');
@@ -212,22 +227,21 @@ function ProgScoresheet() {
         td.setAttribute('contenteditable', 'true');
         td.setAttribute('suppressContentEditableWarning', 'true');
         // default value is 0
-        td.innerHTML = '0';
+        const playerIndex = showRowNums ? i - 1 : i;
+        const score = (roundIndex !== undefined && currentGame.scores[playerIndex] && currentGame.scores[playerIndex][roundIndex] !== undefined)
+          ? currentGame.scores[playerIndex][roundIndex]
+          : 0;
+        td.innerHTML = `${score}`;
         // show numeric keyboard on mobile
         td.inputMode = 'numeric';
         td.spellcheck = false;
-        td.className = 'normalCell';
+        td.className = 'normal-cell';
         // when cell is clicked, auto-select it's contents
         td.onclick = () => selectElementContents(td);
         trBody.appendChild(td);
       }
     }
     tBody?.appendChild(trBody);
-
-    // initialize new row in 2d array to zeros
-    setRowsValues([...rowsValues, initialColTotals]);
-
-    console.log(`addTableRow: currentGame.scores: ${currentGame.scores}, rowsValues: ${rowsValues}`);
   }
 
   /// <summary>
@@ -291,6 +305,7 @@ function ProgScoresheet() {
   /// </summary>
   /// <param name="rowsValues">2d array of numbers</param>
   /// <returns>1D array of column totals</returns>
+  /*
   const sumColumnsArray = (rowsValues: number[][]) => {
     const sumColumnsValues: number[] = [];
     //console.log(`sumColumnsArray - rowsValues: ${rowsValues}`);
@@ -316,6 +331,7 @@ function ProgScoresheet() {
     console.log(`sumColumnsArray - sumColumnsValues: ${sumColumnsValues}`);
     return sumColumnsValues;
  }
+ */
 
   /// <summary>
   ///  Find each header cell and make it's contents auto-select when clicked.
@@ -351,13 +367,35 @@ function ProgScoresheet() {
   }
 
   useEffect(() => {
+    if (currentGame.scores && currentGame.scores.length > 0) {
+      const columnTotals = currentGame.scores.map(playerScores =>
+        playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+      );
+
+      if (showRowNums) {
+        setFooterValues(['', ...columnTotals]);
+      } else {
+        setFooterValues(columnTotals);
+      }
+    }
+  }, [currentGame.scores, showRowNums]);
+
+  useEffect(() => {
     if (didMountRef.current === false) {
       // only fire once when page loads
-      addTableRow();
+      const tBody = document.getElementById('tbody');
+      if (tBody) {
+        tBody.innerHTML = '';
+      }
+      
+      for (let i = 0; i < currentGame.currRound; i++) {
+        addTableRow(i);
+      }
+
       makeHeaderCellsAutoSelect();
-      handleCellChanged();
       const dealerIndex = currentGame.players.indexOf(currentGame.currDealer);
       highlightDealerColumn(dealerIndex);
+      highlightCurrentRoundRow(currentGame.currRound);
       console.log(`useEffect - didMountRef.current: ${didMountRef.current}`);
       didMountRef.current = true;
     }

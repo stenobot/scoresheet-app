@@ -138,8 +138,12 @@ td:before {
 }
 
 .dealer-column-highlight {
-  background-color: #2d475d;
+  background-color: #283e53;
   color: #e4e4e4;
+}
+
+.current-round-highlight {
+  background-color: #313c4e;
 }
 
 label {
