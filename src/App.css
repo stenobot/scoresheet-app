@@ -13,20 +13,7 @@
   letter-spacing: 1px;
 }
 
-.title-with-row-nums {
-  font-family: 'm5x7', monospace;
-  font-size: 34px;
-  font-weight: bold;
-  margin-left: 0.5em;
-  margin-top: 0;
-  margin-bottom: 0;
-  color: #e4e4e4;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.title-no-row-nums {
+.table-title {
   font-family: 'm5x7', monospace;
   font-size: 34px;
   font-weight: bold;
@@ -37,20 +24,8 @@
   -ms-user-select: none;
   user-select: none;
 }
-.subtitle-with-row-nums {
-  font-family: 'm5x7', monospace;
-  font-size: 24px;
-  font-weight: bold;
-  margin-left: 0.7em;
-  margin-top: 0;
-  margin-bottom: 0;
-  color: #70aacb;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
 
-.subtitle-no-row-nums {
+.table-subtitle {
   font-family: 'm5x7', monospace;
   font-size: 24px;
   font-weight: bold;
@@ -163,8 +138,12 @@ td:before {
 }
 
 .dealer-column-highlight {
-  background-color: #2d475d;
+  background-color: #283e53;
   color: #e4e4e4;
+}
+
+.current-round-highlight {
+  background-color: #313c4e;
 }
 
 label {

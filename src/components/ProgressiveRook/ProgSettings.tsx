@@ -4,7 +4,7 @@ import { gameTypes, useGameContext } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgSettings() {
-  const { currentGame, setCurrentGame, games } = useGameContext();
+  const { currentGame, setCurrentGame } = useGameContext();
   const { 
     showRowNums, 
     setShowRowNums, 
@@ -15,13 +15,15 @@ function ProgSettings() {
 
   const navigate = useNavigate();
 
-  const handlePlayersChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePlayersChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPlayers = Number(e.target.value);
     const playersArray = Array.from({ length: selectedPlayers }, (_, i) => `P${i + 1}`);
+    const scoresArray: number[][] = Array.from({ length: selectedPlayers }, () => []);
     
     setCurrentGame({
       ...currentGame,
-      players: playersArray
+      players: playersArray,
+      scores: scoresArray
     });
   };
   const handleStartClick = () => {
@@ -64,7 +66,7 @@ function ProgSettings() {
             <select 
               className='setting-dropdown'
               value={currentGame.players.length}
-              onChange={handlePlayersChange}>
+              onChange={handlePlayersChanged}>
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5">5</option>
