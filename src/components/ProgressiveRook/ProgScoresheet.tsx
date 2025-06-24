@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
-import { useGameContext, gameTypes, Game } from '../../contexts/GameContext';
+import { useGameContext, gameTypes } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgScoresheet() { 
@@ -30,18 +30,18 @@ function ProgScoresheet() {
   const rowNumDoubleTwelveRuleAppliedRef = useRef(false);
 
   const roundDescriptions = [
-    '2 sets',
-    '1 run, 1 set',
-    '2 runs',
-    '3 sets',
-    '1 run, 2 sets',
-    '2 runs, 1 set',
-    '3 runs',
-    '4 sets',
-    '1 run, 3 sets',
-    '2 runs, 2 sets',
-    '3 runs, 1 set'
-  ]
+    ['2 Sets', 'SS'],
+    ['1 Run, 1 Set', 'RS'],
+    ['2 Runs', 'RR'],
+    ['3 Sets', 'SSS'],
+    ['1 Run, 2 Sets', 'RSS'],
+    ['2 Runs, 1 Set', 'RRS'],
+    ['3 Runs', 'RRR'],
+    ['4 Sets', 'SSSS'],
+    ['1 Run, 3 Sets', 'RSSS'],
+    ['2 Runs, 2 Sets', 'RRSS'],
+    ['3 Runs, 1 Set', 'RRRS']
+  ];
 
   /// <summary>
   ///   Adds a new row and other functions when Next Round button is clicked.
@@ -62,8 +62,8 @@ function ProgScoresheet() {
 
     addTableRow(newRound - 1);
     const dealerIndex = currentGame.players.indexOf(newDealer);
-    highlightDealerColumn(dealerIndex);
     highlightCurrentRoundRow(newRound);
+    highlightDealerColumn(dealerIndex);
   }
 
   /// <summary>
@@ -75,7 +75,8 @@ function ProgScoresheet() {
       isGameOver: true,
     });
 
-    // Feed dealer index that is way out of bounds to remove all highlighting
+    // Feed index that is way out of bounds to remove all highlighting
+    highlightCurrentRoundRow(99);
     highlightDealerColumn(99);
 
     // TODO: calculate and set current leader based on scores
@@ -128,9 +129,23 @@ function ProgScoresheet() {
 
   const highlightDealerColumn = (dealerIndex: number) => { 
     if (dealerIndex !== -1) {
+      // Get all table header cells
+      const headerTableRow = document.getElementById('theadtrow');
+      const headerCells = headerTableRow?.getElementsByTagName('th');
+
       // Get all table rows
       const tBody = document.getElementById('tbody');
       const tRows = tBody?.getElementsByTagName('tr');
+      
+      // Set highlight on dealer column in header
+      if (headerCells) {
+        for (let i = 0; i < headerCells.length; i++) {
+          headerCells[i].classList.remove('dealer-column-highlight');
+        }
+        headerCells[dealerIndex + 1].classList.add('dealer-column-highlight');
+      }
+
+      // Set highlight on dealer column in body
       if (tRows) {
         for (let i = 0; i < tRows.length; i++) {
           const row = tRows[i];
@@ -200,11 +215,18 @@ function ProgScoresheet() {
     const trBody = document.createElement('tr');
     for (let i = 0; i < currentGame.players.length + 1; i++) {
       if (i === 0) {
-        // add row number label first, if option selected
+        // add row number and description label first, if option selected
         if (showRowNums) {
           const currRowNum = startingRowNum + rowNumRef.current;
           const td = document.createElement('td');
-          td.innerHTML = `${currRowNum}`;
+          if (roundIndex !== undefined) {
+            td.innerHTML = 
+              `${currRowNum} 
+              <span class="round-description">${roundDescriptions[roundIndex][1]}</span>`;
+          }
+          else {
+            td.innerHTML = `${currRowNum}`;
+          }
 
           // special rule for Progressive Rook preset,
           // where row 12 is doubled
@@ -394,8 +416,8 @@ function ProgScoresheet() {
 
       makeHeaderCellsAutoSelect();
       const dealerIndex = currentGame.players.indexOf(currentGame.currDealer);
-      highlightDealerColumn(dealerIndex);
       highlightCurrentRoundRow(currentGame.currRound);
+      highlightDealerColumn(dealerIndex);
       console.log(`useEffect - didMountRef.current: ${didMountRef.current}`);
       didMountRef.current = true;
     }
@@ -410,7 +432,7 @@ function ProgScoresheet() {
           <h6 style={{marginLeft: showColTotals ? 22 : 0}} className='table-subtitle'>
             {currentGame.isGameOver ?
               <div>{currentGame.currLeader} is the winner!</div> : 
-              <div>{roundDescriptions[currentGame.currRound - 1]}</div>
+              <div>{roundDescriptions[currentGame.currRound - 1][0]}</div>
             }
           </h6>
         </caption>
