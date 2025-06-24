@@ -2,20 +2,21 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext, gameTypes } from '../../contexts/GameContext';
-import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
+import { useSimpleSettingsContext } from '../../contexts/SimpleSettingsContext';
 
-function ProgScoresheet() { 
+function SimpleScoresheet() { 
   const { currentGame, setCurrentGame } = useGameContext();
 
   const { 
     showRowNums, 
     startingRowNum, 
-    showColTotals } = useProgSettingsContext();
+    showColTotals } = useSimpleSettingsContext();
 
   const navigate = useNavigate();
 
   // initial column totals values to set below arrays
   const initialColTotals = Array.from(currentGame.players.keys()).map( () => 0);
+  
 
   // create array of column totals for the footer
   const [footerValues, setFooterValues] = useState(
@@ -26,22 +27,8 @@ function ProgScoresheet() {
 
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
-  const rowNumDoubleTwelveRuleAppliedRef = useRef(false);
 
-  const roundDescriptions = [
-    ['2 Sets', 'SS'],
-    ['1 Run, 1 Set', 'RS'],
-    ['2 Runs', 'RR'],
-    ['3 Sets', 'SSS'],
-    ['1 Run, 2 Sets', 'RSS'],
-    ['2 Runs, 1 Set', 'RRS'],
-    ['3 Runs', 'RRR'],
-    ['4 Sets', 'SSSS'],
-    ['1 Run, 3 Sets', 'RSSS'],
-    ['2 Runs, 2 Sets', 'RRSS'],
-    ['3 Runs, 1 Set', 'RRRS']
-  ];
-
+  
   /// <summary>
   ///   Adds a new row and other functions when Next Round button is clicked.
   /// </summary>
@@ -63,38 +50,6 @@ function ProgScoresheet() {
     const dealerIndex = currentGame.players.indexOf(newDealer);
     highlightCurrentRoundRow(newRound);
     highlightDealerColumn(dealerIndex);
-
-    // Convert zeros to dashes in the second to last row
-    convertZerosToDashesInLastRoundRow();
-  }
-
-  /// <summary>
-  ///   Converts any cell with innerHTML value of "0" to "-" in the second to last row.
-  ///   This function should be called after adding a new row to convert zeros in the previous row.
-  /// </summary>
-  const convertZerosToDashesInLastRoundRow = () => {
-    const tBody = document.getElementById('tbody');
-    const tRows = tBody?.getElementsByTagName('tr');
-    
-    if (tRows && tRows.length > 1) {
-      // Get the second to last row (index is length - 2)
-      const secondToLastRowIndex = tRows.length - 2;
-      const secondToLastRow = tRows[secondToLastRowIndex];
-      const cells = secondToLastRow.getElementsByTagName('td');
-      
-      if (cells) {
-        // Loop through cells in the second to last row
-        const playerOffset = showRowNums ? 1 : 0;
-        for (let j = playerOffset; j < cells.length; j++) {
-          const td = cells[j];
-          
-          // Check if the cell contains "0" and convert it to "-"
-          if (td.innerHTML === '0') {
-            td.innerHTML = '-';
-          }
-        }
-      }
-    }
   }
 
   /// <summary>
@@ -112,7 +67,7 @@ function ProgScoresheet() {
 
     // TODO: calculate and set current leader based on scores
   }
-
+  
   /// <summary>
   ///   Handler that fires each time a cell is changed.
   ///   Finds all of the cells in the html table body, then updates the 2d array 
@@ -124,26 +79,26 @@ function ProgScoresheet() {
     if (tRows && tRows.length > 0) {
       const newScores: number[][] = Array.from({ length: currentGame.players.length }, () => []);
 
-      // Loop through rows
+      // loop through rows
       for (let i = 0; i < tRows.length; i++) {
         const row = tRows[i];
         const cells = row.getElementsByTagName('td');
         if (cells) {
-          // Loop through cells
+          // loop through cells
           const playerOffset = showRowNums ? 1 : 0;
           for (let j = playerOffset; j < cells.length; j++) {
             const td = cells[j];
             const playerIndex = j - playerOffset;
 
-            // Cell's value is a number or a dash, use normal cell styling
-            if (Number.isInteger(Number(td.innerHTML)) || td.innerHTML === '-') {
+            // if cell's value is a number...
+            if (Number.isInteger(Number(td.innerHTML))) {
               td.classList.add('normal-cell');
               td.classList.remove('normal-cell-bad-input');
               const cellValue = Number(td.innerHTML);
               newScores[playerIndex][i] = cellValue;
             }
             else {
-              // Cell's value is not a number or dash, set bad input styling
+              // cell's value is not a number
               td.classList.add('normal-cell-bad-input');
               td.classList.remove('normal-cell');
             }
@@ -222,7 +177,7 @@ function ProgScoresheet() {
       }
     }
   }
-
+  
   /// <summary>
   ///   Adds a new row with editable cells to the table.
   /// </summary>
@@ -236,25 +191,8 @@ function ProgScoresheet() {
         if (showRowNums) {
           const currRowNum = startingRowNum + rowNumRef.current;
           const td = document.createElement('td');
-          if (roundIndex !== undefined) {
-            td.innerHTML = 
-              `${currRowNum} 
-              <span class="round-description">${roundDescriptions[roundIndex][1]}</span>`;
-          }
-          else {
-            td.innerHTML = `${currRowNum}`;
-          }
-
-          // special rule for Progressive Rook preset,
-          // where row 12 is doubled
-          if (currentGame.gameType === gameTypes[1] && 
-            currRowNum === 12 &&
-            rowNumDoubleTwelveRuleAppliedRef.current === false) {
-            rowNumDoubleTwelveRuleAppliedRef.current = true;
-          }
-          else {
-            rowNumRef.current++;
-          }
+          td.innerHTML = `${currRowNum}`;
+          rowNumRef.current++;   
 
           td.className = 'num-label-cell';
           td.onclick = () => selectElementContents(td);
@@ -416,7 +354,7 @@ function ProgScoresheet() {
           <h6 style={{marginLeft: showColTotals ? 22 : 0}} className='table-subtitle'>
             {currentGame.isGameOver ?
               <div>{currentGame.currLeader} is the winner!</div> : 
-              <div>{roundDescriptions[currentGame.currRound - 1][0]}</div>
+              <div>{currentGame.currRound} rounds played</div>
             }
           </h6>
         </caption>
@@ -488,8 +426,8 @@ function ProgScoresheet() {
           </div>
         </label>
       </div>
-      {/* <p style={{ color: '#70aacb', fontSize: '20px'}}>(<kbd>Double-click</kbd> row to delete)</p> */}
     </div>
   );
 }
-export default ProgScoresheet;
+
+export default SimpleScoresheet;

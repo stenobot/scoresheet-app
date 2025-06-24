@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
 import { gameTypes, useGameContext } from '../../contexts/GameContext';
-import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
+import { useSimpleSettingsContext } from '../../contexts/SimpleSettingsContext';
 
-function ProgSettings() {
+function SimpleSettings() {
   const { currentGame, setCurrentGame } = useGameContext();
   const { 
     showRowNums, 
@@ -11,7 +11,7 @@ function ProgSettings() {
     startingRowNum, 
     setStartingRowNum, 
     showColTotals, 
-    setShowColTotals } = useProgSettingsContext();
+    setShowColTotals } = useSimpleSettingsContext();
 
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ function ProgSettings() {
   };
   const handleStartClick = () => {
     // Create settings object
-    const progSettings = {
+    const simpleSettings = {
       showRowNums,
       startingRowNum,
       showColTotals
@@ -37,12 +37,12 @@ function ProgSettings() {
     // Set current game with settings and first player as dealer
     setCurrentGame({
       ...currentGame,
-      settings: JSON.stringify(progSettings),
+      settings: JSON.stringify(simpleSettings),
       currDealer: currentGame.players[0]
     });
     
-    console.log(`handleStartClick - settings saved: ${JSON.stringify(progSettings)}`);
-    navigate('/prog-scoresheet');
+    console.log(`handleStartClick - settings saved: ${JSON.stringify(simpleSettings)}`);
+    navigate('/simple-scoresheet');
   };
 
   const handleHomeClick = () => {
@@ -68,7 +68,7 @@ function ProgSettings() {
             </select>
           </div>
         </div>
-
+        
         <div className="setting-row">
           <div className="setting-label">
             PLAYER NAMES
@@ -95,6 +95,52 @@ function ProgSettings() {
             </div>
           </div>
         </div>
+
+        <div className="setting-row-fixed">
+          <div className="setting-label">
+            SHOW COLUMN TOTALS
+          </div>
+          <div>
+           <input 
+                className='setting-checkbox' 
+                type='checkbox' 
+                checked={showColTotals}
+                onChange={e => setShowColTotals(e.target.checked)} />
+          </div>
+        </div>
+
+         <div className="setting-row-fixed">
+          <div className="setting-label">
+            SHOW ROW NUMBERS
+          </div>
+          <div>
+            <input 
+              className='setting-checkbox' 
+              type='checkbox' 
+              checked={showRowNums}
+              onChange={e => setShowRowNums(e.target.checked)} />
+          </div>
+        </div>
+        { showRowNums && currentGame.gameType === gameTypes[1] &&
+          <div className="setting-row">
+            <div className="setting-label">
+              STARTING ROW NUMBER
+            </div>
+            <div className="setting-control">
+              <select 
+                className='setting-dropdown' 
+                value={startingRowNum}
+                onChange={e => setStartingRowNum(Number(e.target.value))}>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+        }
       </div>
 
       <div style={{ marginBottom: '20px' }}>
@@ -112,4 +158,4 @@ function ProgSettings() {
   );
 }
 
-export default ProgSettings;
+export default SimpleSettings;

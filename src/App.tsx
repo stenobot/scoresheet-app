@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Start from './components/Start';
@@ -10,12 +9,9 @@ import ProgSettingsContextProvider from './contexts/ProgSettingsContext';
 import MahjongSettingsContextProvider from './contexts/MahjongSettingsContext';
 import MahjongScoresheet from './components/Mahjong/MahjongScoresheet';
 import LoadGames from './components/LoadGames';
-
-export enum Preset {
-  None = 'none',
-  ProgressiveRook = 'Progressive Rook',
-  Mahjong = 'Mahjong (1960s)'
-}
+import SimpleSettingsContextProvider from './contexts/SimpleSettingsContext';
+import SimpleSettings from './components/Simple/SimpleSettings';
+import SimpleScoresheet from './components/Simple/SimpleScoresheet';
 
 function App() {
   return (
@@ -62,7 +58,26 @@ function App() {
                 </MahjongSettingsContextProvider>
               </GameContextProvider>
             } />
-          <Route path="/load-games" element={
+        <Route
+          path="/simple-settings"
+          element={
+            <GameContextProvider>
+              <SimpleSettingsContextProvider>
+                <SimpleSettings />
+              </SimpleSettingsContextProvider>
+            </GameContextProvider>
+          } />
+        <Route
+          path="/simple-scoresheet"
+          element={
+            <GameContextProvider>
+              <SimpleSettingsContextProvider>
+                <SimpleScoresheet />
+              </SimpleSettingsContextProvider>
+            </GameContextProvider>
+          } />
+        <Route path="/load-games" 
+          element={
             <GameContextProvider>
               <LoadGames />
             </GameContextProvider>  

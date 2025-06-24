@@ -33,6 +33,8 @@ function Start() {
 
     switch (newGame.gameType) {
       case gameTypes[0]: // Simple Scoresheet
+        navigate('/simple-settings');
+        break;
       case gameTypes[1]: // Progressive Rook
         navigate('/prog-settings');
         break;
