@@ -22,7 +22,7 @@ const navigate = useNavigate();
 
   const handleLoadClick = () => {
     switch (currentGame.gameType) {
-    case gameTypes[0]: // Simple Scoresheet
+    case gameTypes[0]: // Basic Scoresheet
     case gameTypes[1]: // Progressive Rook
       if (isEmpty(currentGame.settings))
       {

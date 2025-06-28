@@ -1,16 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
-import { useGameContext, gameTypes } from '../../contexts/GameContext';
-import { useSimpleSettingsContext } from '../../contexts/SimpleSettingsContext';
+import { useGameContext } from '../../contexts/GameContext';
+import { useBasicSettingsContext } from '../../contexts/BasicSettingsContext';
 
-function SimpleScoresheet() { 
+function BasicScoresheet() { 
   const { currentGame, setCurrentGame } = useGameContext();
 
   const { 
     showRowNums, 
     startingRowNum, 
-    showColTotals } = useSimpleSettingsContext();
+    showColTotals } = useBasicSettingsContext();
 
   const navigate = useNavigate();
 
@@ -430,4 +430,4 @@ function SimpleScoresheet() {
   );
 }
 
-export default SimpleScoresheet;
+export default BasicScoresheet;

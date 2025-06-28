@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
 import { gameTypes, useGameContext } from '../../contexts/GameContext';
-import { useSimpleSettingsContext } from '../../contexts/SimpleSettingsContext';
+import { useBasicSettingsContext } from '../../contexts/BasicSettingsContext';
 
-function SimpleSettings() {
+function BasicSettings() {
   const { currentGame, setCurrentGame } = useGameContext();
   const { 
     showRowNums, 
@@ -11,7 +11,7 @@ function SimpleSettings() {
     startingRowNum, 
     setStartingRowNum, 
     showColTotals, 
-    setShowColTotals } = useSimpleSettingsContext();
+    setShowColTotals } = useBasicSettingsContext();
 
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ function SimpleSettings() {
   };
   const handleStartClick = () => {
     // Create settings object
-    const simpleSettings = {
+    const basicSettings = {
       showRowNums,
       startingRowNum,
       showColTotals
@@ -37,12 +37,12 @@ function SimpleSettings() {
     // Set current game with settings and first player as dealer
     setCurrentGame({
       ...currentGame,
-      settings: JSON.stringify(simpleSettings),
+      settings: JSON.stringify(basicSettings),
       currDealer: currentGame.players[0]
     });
     
-    console.log(`handleStartClick - settings saved: ${JSON.stringify(simpleSettings)}`);
-    navigate('/simple-scoresheet');
+    console.log(`handleStartClick - settings saved: ${JSON.stringify(basicSettings)}`);
+    navigate('/basic-scoresheet');
   };
 
   const handleHomeClick = () => {
@@ -158,4 +158,4 @@ function SimpleSettings() {
   );
 }
 
-export default SimpleSettings;
+export default BasicSettings;

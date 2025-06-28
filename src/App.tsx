@@ -9,9 +9,9 @@ import ProgSettingsContextProvider from './contexts/ProgSettingsContext';
 import MahjongSettingsContextProvider from './contexts/MahjongSettingsContext';
 import MahjongScoresheet from './components/Mahjong/MahjongScoresheet';
 import LoadGames from './components/LoadGames';
-import SimpleSettingsContextProvider from './contexts/SimpleSettingsContext';
-import SimpleSettings from './components/Simple/SimpleSettings';
-import SimpleScoresheet from './components/Simple/SimpleScoresheet';
+import BasicSettingsContextProvider from './contexts/BasicSettingsContext';
+import BasicSettings from './components/Basic/BasicSettings';
+import BasicScoresheet from './components/Basic/BasicScoresheet';
 
 function App() {
   return (
@@ -59,21 +59,21 @@ function App() {
               </GameContextProvider>
             } />
         <Route
-          path="/simple-settings"
+          path="/basic-settings"
           element={
             <GameContextProvider>
-              <SimpleSettingsContextProvider>
-                <SimpleSettings />
-              </SimpleSettingsContextProvider>
+              <BasicSettingsContextProvider>
+                <BasicSettings />
+              </BasicSettingsContextProvider>
             </GameContextProvider>
           } />
         <Route
-          path="/simple-scoresheet"
+          path="/basic-scoresheet"
           element={
             <GameContextProvider>
-              <SimpleSettingsContextProvider>
-                <SimpleScoresheet />
-              </SimpleSettingsContextProvider>
+              <BasicSettingsContextProvider>
+                <BasicScoresheet />
+              </BasicSettingsContextProvider>
             </GameContextProvider>
           } />
         <Route path="/load-games" 
