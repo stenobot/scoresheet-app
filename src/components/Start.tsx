@@ -32,8 +32,8 @@ function Start() {
     addGame(newGame);
 
     switch (newGame.gameType) {
-      case gameTypes[0]: // Simple Scoresheet
-        navigate('/simple-settings');
+      case gameTypes[0]: // Basic Scoresheet
+        navigate('/basic-settings');
         break;
       case gameTypes[1]: // Progressive Rook
         navigate('/prog-settings');
@@ -50,6 +50,7 @@ function Start() {
 
   return (
     <div className='container'>
+      <h1 className="title">Scorekeeper</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <label>
           <input

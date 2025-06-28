@@ -3,7 +3,7 @@ import { isEmpty } from '../utils/Utils';
 import { useLocation } from 'react-router-dom';
 
 export enum GameType {
-  Simple = 'Simple Scoresheet',
+  Basic = 'Basic Scoresheet',
   ProgressiveRook = 'Progressive Rook',
   Mahjong = 'Mahjong'
 };

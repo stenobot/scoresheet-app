@@ -6,7 +6,7 @@ export interface ProgSettings {
   showColTotals: boolean;
 }
 
-const SimpleSettingsContext = createContext({
+const BasicSettingsContext = createContext({
     showRowNums: false,
     setShowRowNums: (showRowNums: boolean) => {},
     startingRowNum: 0,
@@ -15,13 +15,13 @@ const SimpleSettingsContext = createContext({
     setShowColTotals: (showColTotals: boolean) => {},
 });
 
-const SimpleSettingsContextProvider = (props: PropsWithChildren<{}>) => {
+const BasicSettingsContextProvider = (props: PropsWithChildren<{}>) => {
     const [showRowNums, setShowRowNums] = useState(true);
     const [startingRowNum, setStartingRowNum] = useState(1);
     const [showColTotals, setShowColTotals] = useState(true);
 
     return (
-        <SimpleSettingsContext.Provider value={{
+        <BasicSettingsContext.Provider value={{
             showRowNums,
             setShowRowNums,
             startingRowNum,
@@ -30,9 +30,9 @@ const SimpleSettingsContextProvider = (props: PropsWithChildren<{}>) => {
             setShowColTotals
         }}>
             {props.children}
-        </SimpleSettingsContext.Provider>
+        </BasicSettingsContext.Provider>
     );
 };
 
-export const useSimpleSettingsContext = () => useContext(SimpleSettingsContext);
-export default SimpleSettingsContextProvider;
+export const useBasicSettingsContext = () => useContext(BasicSettingsContext);
+export default BasicSettingsContextProvider;
