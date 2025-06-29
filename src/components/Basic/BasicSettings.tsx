@@ -134,18 +134,18 @@ function BasicSettings() {
         
         <div className="setting-row">
           <div className="setting-label">
-            {endCondition === 'Score Reached' ? 'WINNING SCORE' : 'FINAL ROUND'}
+            {endCondition === endConditions[0] ? 'WINNING SCORE' : 'FINAL ROUND'}
           </div>
           <div className="setting-control">
             <input 
               className='setting-input' 
               type='number' 
-              value={endCondition === 'Score Reached' ? winningScore : finalRound}
+              value={endCondition === endConditions[0] ? winningScore : finalRound}
               onClick={(e: React.MouseEvent<HTMLInputElement>) => {
                 e.currentTarget.select();
               }}
               onChange={e => {
-                if (endCondition === 'Score Reached') {
+                if (endCondition === endConditions[0]) {
                   setWinningScore(Number(e.target.value));
                 } else {
                   setFinalRound(Number(e.target.value));
@@ -154,7 +154,7 @@ function BasicSettings() {
           </div>
         </div>
 
-        {endCondition === 'Round Reached' &&
+        {endCondition === endConditions[1] &&
           <div className="setting-row">
             <div className="setting-label">
               WINNING CONDITION

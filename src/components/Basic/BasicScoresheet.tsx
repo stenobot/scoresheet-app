@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext } from '../../contexts/GameContext';
-import { useBasicSettingsContext } from '../../contexts/BasicSettingsContext';
+import { useBasicSettingsContext, winConditions } from '../../contexts/BasicSettingsContext';
 
 //TODO: calculate the winner based on win condition, end game based on end condition
 
@@ -12,7 +12,9 @@ function BasicScoresheet() {
   const { 
     showRowNums, 
     startingRowNum, 
-    showColTotals } = useBasicSettingsContext();
+    showColTotals,
+    winCondition
+  } = useBasicSettingsContext();
 
   const navigate = useNavigate();
 
@@ -59,11 +61,17 @@ function BasicScoresheet() {
     highlightDealerColumn(dealerIndex);
   }
 
+  /// <summary>
+  ///   Calculates the leader based on the win condition.
+  /// </summary>
+  /// <param name="columnTotals">The column totals to calculate the leader from</param>
+  /// <returns>The leader's name</returns>
   const calculateLeader = (columnTotals: (string | number)[]) => {
     // Filter out any string values (like the empty string for row numbers column)
     const scores = columnTotals.filter(value => typeof value === 'number') as number[];
     const maxScore = Math.max(...scores);
-    const leaderIndex = scores.indexOf(maxScore);
+    const minScore = Math.min(...scores);
+    const leaderIndex = winCondition === winConditions[0] ? scores.indexOf(maxScore) : scores.indexOf(minScore);
     console.log(`calculateLeader - scores: ${scores}, maxScore: ${maxScore}, leaderIndex: ${leaderIndex}`);
     console.log(`calculateLeader - currentGame.players: ${currentGame.players}`);
     return currentGame.players[leaderIndex];
