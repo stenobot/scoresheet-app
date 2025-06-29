@@ -51,7 +51,8 @@ function BasicSettings() {
     setCurrentGame({
       ...currentGame,
       settings: JSON.stringify(basicSettings),
-      currDealer: currentGame.players[0]
+      currDealer: currentGame.players[0],
+      currLeader: currentGame.players[0]
     });
     
     console.log(`handleStartClick - settings saved: ${JSON.stringify(basicSettings)}`);

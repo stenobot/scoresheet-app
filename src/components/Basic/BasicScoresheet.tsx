@@ -4,6 +4,8 @@ import PrimaryButton from '../PrimaryButton';
 import { useGameContext } from '../../contexts/GameContext';
 import { useBasicSettingsContext } from '../../contexts/BasicSettingsContext';
 
+//TODO: calculate the winner based on win condition, end game based on end condition
+
 function BasicScoresheet() { 
   const { currentGame, setCurrentGame } = useGameContext();
 
@@ -63,6 +65,7 @@ function BasicScoresheet() {
     const maxScore = Math.max(...scores);
     const leaderIndex = scores.indexOf(maxScore);
     console.log(`calculateLeader - scores: ${scores}, maxScore: ${maxScore}, leaderIndex: ${leaderIndex}`);
+    console.log(`calculateLeader - currentGame.players: ${currentGame.players}`);
     return currentGame.players[leaderIndex];
   };
 
@@ -281,7 +284,7 @@ function BasicScoresheet() {
   ///   Handles input in a cell to limit the number of characters to 4.
   /// </summary>
   /// <param name="e">Event</param>
-  const handleCellInput = (e: React.FormEvent<HTMLElement>) => {
+  const handleHeaderCellInput = (e: React.FormEvent<HTMLElement>, i: number) => {
     const maxChars = 4;
     const el = e.currentTarget;
     if (el.textContent && el.textContent.length > maxChars) {
@@ -294,6 +297,14 @@ function BasicScoresheet() {
       sel?.removeAllRanges();
       sel?.addRange(range);
     }
+
+    const newPlayers = [...currentGame.players];
+    newPlayers[i] = e.currentTarget.textContent ?? '';
+    console.log(`changeName - newPlayers: ${newPlayers}`);
+    setCurrentGame({
+      ...currentGame,
+      players: newPlayers
+    });
   };
 
   /// <summary>
@@ -372,8 +383,17 @@ function BasicScoresheet() {
           <h2 style={{marginLeft: showColTotals ? 22 : 0}} className='table-title'>{currentGame.title}</h2>
           <h6 style={{marginLeft: showColTotals ? 22 : 0}} className='table-subtitle'>
             {currentGame.isGameOver ?
-              <div>{currentGame.currLeader} is the winner!</div> : 
-              <div><span style={{color: 'white'}}>Round:</span> {currentGame.currRound}, <span style={{color: 'white'}}>Current leader:</span> {currentGame.currLeader}</div>
+              <div>{currentGame.currLeader} wins!</div> : 
+              <div>
+                <span style={{color: 'white'}}>Round: </span>
+                {currentGame.currRound}
+                {currentGame.currRound > 1 && (
+                  <>
+                    <span style={{color: 'white'}}>, Current leader: </span>
+                    {currentGame.currLeader}
+                  </>
+                )}
+              </div>
             }
           </h6>
         </caption>
@@ -382,10 +402,13 @@ function BasicScoresheet() {
             { showRowNums === false ? 
                 Array.from(currentGame.players.keys()).map( i => 
                   <th 
+                    className={getTableHeaderClass()}
                     contentEditable 
+                    onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
+                    onInput={ e => handleHeaderCellInput(e, i)}
                     suppressContentEditableWarning={true} 
-                    spellCheck={false} key={i} 
-                    className={getTableHeaderClass()}>{currentGame.players[i]}
+                    spellCheck={false} 
+                    key={i}>{currentGame.players[i]}
                   </th>
                 ) : 
                 Array.from(Array(currentGame.players.length + 1).keys()).map( i => {
@@ -395,7 +418,7 @@ function BasicScoresheet() {
                         className={getTableHeaderClass()}
                         contentEditable
                         onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
-                        onInput={handleCellInput}
+                        onInput={e => handleHeaderCellInput(e, i - 1)}
                         suppressContentEditableWarning={true}
                         spellCheck={false}
                         key={i}>{currentGame.players[i - 1]}</th>}
