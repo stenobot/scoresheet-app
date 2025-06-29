@@ -27,7 +27,6 @@ function BasicScoresheet() {
 
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
-
   
   /// <summary>
   ///   Adds a new row and other functions when Next Round button is clicked.
@@ -39,11 +38,17 @@ function BasicScoresheet() {
     // Create a new scores array with an additional empty array for the new round
     const newScores = currentGame.scores.map(playerScores => [...playerScores, 0]);
 
+    // Set the current leader based on the new scores
+    const currLeader = calculateLeader(newScores.map(playerScores =>
+      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+    ));
+    
     setCurrentGame({
       ...currentGame,
       currRound: newRound,
       currDealer: newDealer,
-      scores: newScores
+      scores: newScores,
+      currLeader: currLeader
     });
 
     addTableRow(newRound - 1);
@@ -52,20 +57,34 @@ function BasicScoresheet() {
     highlightDealerColumn(dealerIndex);
   }
 
+  const calculateLeader = (columnTotals: (string | number)[]) => {
+    // Filter out any string values (like the empty string for row numbers column)
+    const scores = columnTotals.filter(value => typeof value === 'number') as number[];
+    const maxScore = Math.max(...scores);
+    const leaderIndex = scores.indexOf(maxScore);
+    console.log(`calculateLeader - scores: ${scores}, maxScore: ${maxScore}, leaderIndex: ${leaderIndex}`);
+    return currentGame.players[leaderIndex];
+  };
+
   /// <summary>
   ///   End the game by freezing the input cells, declaring the winner, and hiding this button
   /// </summary>
   const handleEndGameClicked = () => {
+    // Set the current leader based on the new scores
+    const currLeader = calculateLeader(currentGame.scores.map(playerScores =>
+      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+    ));
     setCurrentGame({
       ...currentGame,
       isGameOver: true,
+      currLeader: currLeader
     });
 
     // Feed index that is way out of bounds to remove all highlighting
     highlightCurrentRoundRow(99);
     highlightDealerColumn(99);
 
-    // TODO: calculate and set current leader based on scores
+    // TODO: end game based on winning score
   }
   
   /// <summary>
@@ -354,7 +373,7 @@ function BasicScoresheet() {
           <h6 style={{marginLeft: showColTotals ? 22 : 0}} className='table-subtitle'>
             {currentGame.isGameOver ?
               <div>{currentGame.currLeader} is the winner!</div> : 
-              <div>{currentGame.currRound} rounds played</div>
+              <div><span style={{color: 'white'}}>Round:</span> {currentGame.currRound}, <span style={{color: 'white'}}>Current leader:</span> {currentGame.currLeader}</div>
             }
           </h6>
         </caption>
