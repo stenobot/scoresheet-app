@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
-import { gameTypes, useGameContext } from '../../contexts/GameContext';
+import { useGameContext } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgSettings() {
@@ -81,6 +81,9 @@ function ProgSettings() {
                   type="text"
                   className="setting-input"
                   value={player}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    e.currentTarget.select();
+                  }}
                   onChange={(e) => {
                     const newPlayers = [...currentGame.players];
                     newPlayers[index] = e.target.value;

@@ -4,6 +4,7 @@ export interface ProgSettings {
   showRowNums: boolean;
   startingRowNum: number;
   showColTotals: boolean;
+  winningScore: number;
 }
 
 const BasicSettingsContext = createContext({
@@ -13,12 +14,15 @@ const BasicSettingsContext = createContext({
     setStartingRowNum: (startingRowNum: number) => {},
     showColTotals: false,
     setShowColTotals: (showColTotals: boolean) => {},
+    winningScore: 0,
+    setWinningScore: (winningScore: number) => {},
 });
 
 const BasicSettingsContextProvider = (props: PropsWithChildren<{}>) => {
     const [showRowNums, setShowRowNums] = useState(true);
     const [startingRowNum, setStartingRowNum] = useState(1);
     const [showColTotals, setShowColTotals] = useState(true);
+    const [winningScore, setWinningScore] = useState(50);
 
     return (
         <BasicSettingsContext.Provider value={{
@@ -27,7 +31,9 @@ const BasicSettingsContextProvider = (props: PropsWithChildren<{}>) => {
             startingRowNum,
             setStartingRowNum,
             showColTotals,
-            setShowColTotals
+            setShowColTotals,
+            winningScore,
+            setWinningScore
         }}>
             {props.children}
         </BasicSettingsContext.Provider>

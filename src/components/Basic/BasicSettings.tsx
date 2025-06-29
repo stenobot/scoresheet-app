@@ -11,7 +11,10 @@ function BasicSettings() {
     startingRowNum, 
     setStartingRowNum, 
     showColTotals, 
-    setShowColTotals } = useBasicSettingsContext();
+    setShowColTotals, 
+    winningScore,
+    setWinningScore
+  } = useBasicSettingsContext();
 
   const navigate = useNavigate();
 
@@ -31,7 +34,8 @@ function BasicSettings() {
     const basicSettings = {
       showRowNums,
       startingRowNum,
-      showColTotals
+      showColTotals,
+      winningScore
     };
 
     // Set current game with settings and first player as dealer
@@ -62,6 +66,7 @@ function BasicSettings() {
               className='setting-dropdown'
               value={currentGame.players.length}
               onChange={handlePlayersChanged}>
+              <option value="2">2</option>
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5">5</option>
@@ -81,6 +86,9 @@ function BasicSettings() {
                   type="text"
                   className="setting-input"
                   value={player}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    e.currentTarget.select();
+                  }}
                   onChange={(e) => {
                     const newPlayers = [...currentGame.players];
                     newPlayers[index] = e.target.value;
@@ -93,6 +101,22 @@ function BasicSettings() {
                 />
               ))}
             </div>
+          </div>
+        </div>
+
+        <div className="setting-row">
+          <div className="setting-label">
+            WINNING SCORE
+          </div>
+          <div className="setting-control">
+            <input 
+              className='setting-input' 
+              type='number' 
+              value={winningScore}
+              onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                e.currentTarget.select();
+              }}
+              onChange={e => setWinningScore(Number(e.target.value))} />
           </div>
         </div>
 
@@ -121,7 +145,7 @@ function BasicSettings() {
               onChange={e => setShowRowNums(e.target.checked)} />
           </div>
         </div>
-        { showRowNums && currentGame.gameType === gameTypes[1] &&
+        { showRowNums &&
           <div className="setting-row">
             <div className="setting-label">
               STARTING ROW NUMBER
