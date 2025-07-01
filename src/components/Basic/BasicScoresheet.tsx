@@ -2,9 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext } from '../../contexts/GameContext';
-import { useBasicSettingsContext, winConditions } from '../../contexts/BasicSettingsContext';
-
-//TODO: calculate the winner based on win condition, end game based on end condition
+import { endConditions, useBasicSettingsContext, winConditions } from '../../contexts/BasicSettingsContext';
 
 function BasicScoresheet() { 
   const { currentGame, setCurrentGame } = useGameContext();
@@ -13,7 +11,10 @@ function BasicScoresheet() {
     showRowNums, 
     startingRowNum, 
     showColTotals,
-    winCondition
+    winCondition, 
+    endCondition,
+    winningScore,
+    finalRound
   } = useBasicSettingsContext();
 
   const navigate = useNavigate();
@@ -21,7 +22,6 @@ function BasicScoresheet() {
   // initial column totals values to set below arrays
   const initialColTotals = Array.from(currentGame.players.keys()).map( () => 0);
   
-
   // create array of column totals for the footer
   const [footerValues, setFooterValues] = useState(
     // if show row numbers is selected, add extra blank "" element for row number label column 
@@ -31,7 +31,8 @@ function BasicScoresheet() {
 
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
-  
+
+
   /// <summary>
   ///   Adds a new row and other functions when Next Round button is clicked.
   /// </summary>
@@ -41,6 +42,15 @@ function BasicScoresheet() {
     
     // Create a new scores array with an additional empty array for the new round
     const newScores = currentGame.scores.map(playerScores => [...playerScores, 0]);
+
+    // Check if the winning score has been reached
+    if (currentGame.scores.some(playerScores =>
+      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0) >= winningScore
+    )) {
+      // We have reached the winning score, trigger end game
+      triggerEndGame();
+      return;
+    }
 
     // Set the current leader based on the new scores
     const currLeader = calculateLeader(newScores.map(playerScores =>
@@ -72,15 +82,21 @@ function BasicScoresheet() {
     const maxScore = Math.max(...scores);
     const minScore = Math.min(...scores);
     const leaderIndex = winCondition === winConditions[0] ? scores.indexOf(maxScore) : scores.indexOf(minScore);
-    console.log(`calculateLeader - scores: ${scores}, maxScore: ${maxScore}, leaderIndex: ${leaderIndex}`);
-    console.log(`calculateLeader - currentGame.players: ${currentGame.players}`);
     return currentGame.players[leaderIndex];
   };
 
   /// <summary>
+  ///   Checks if the current round is the final round.
+  /// </summary>
+  /// <returns>True if the current round is the final round, false otherwise</returns>
+  const isFinalRound = () => {
+    return currentGame.currRound >= finalRound && endCondition === endConditions[1];
+  }
+
+  /// <summary>
   ///   End the game by freezing the input cells, declaring the winner, and hiding this button
   /// </summary>
-  const handleEndGameClicked = () => {
+  const triggerEndGame = () => {
     // Set the current leader based on the new scores
     const currLeader = calculateLeader(currentGame.scores.map(playerScores =>
       playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
@@ -143,47 +159,56 @@ function BasicScoresheet() {
     }
   }
 
+  /// <summary>
+  ///   Highlight the column of the current dealer.
+  /// </summary>
+  /// <param name="dealerIndex">The index of the dealer in the players array. Op out if out of bounds.</param>
   const highlightDealerColumn = (dealerIndex: number) => { 
-    if (dealerIndex !== -1) {
-      // Get all table header cells
-      const headerTableRow = document.getElementById('theadtrow');
-      const headerCells = headerTableRow?.getElementsByTagName('th');
+    if (dealerIndex < 0 || dealerIndex >= currentGame.players.length) {
+      return;
+    }
+    // Get all table header cells
+    const headerTableRow = document.getElementById('theadtrow');
+    const headerCells = headerTableRow?.getElementsByTagName('th');
 
-      // Get all table rows
-      const tBody = document.getElementById('tbody');
-      const tRows = tBody?.getElementsByTagName('tr');
-      
-      // Set highlight on dealer column in header
-      if (headerCells) {
-        for (let i = 0; i < headerCells.length; i++) {
-          headerCells[i].classList.remove('dealer-column-highlight');
-        }
-        headerCells[dealerIndex + 1].classList.add('dealer-column-highlight');
+    // Get all table rows
+    const tBody = document.getElementById('tbody');
+    const tRows = tBody?.getElementsByTagName('tr');
+    
+    // Set highlight on dealer column in header
+    if (headerCells) {
+      for (let i = 0; i < headerCells.length; i++) {
+        headerCells[i].classList.remove('dealer-column-highlight');
       }
+      headerCells[dealerIndex + 1].classList.add('dealer-column-highlight');
+    }
 
-      // Set highlight on dealer column in body
-      if (tRows) {
-        for (let i = 0; i < tRows.length; i++) {
-          const row = tRows[i];
-          const cells = row.getElementsByTagName('td');
+    // Set highlight on dealer column in body
+    if (tRows) {
+      for (let i = 0; i < tRows.length; i++) {
+        const row = tRows[i];
+        const cells = row.getElementsByTagName('td');
 
-          for (let j = 0; j < cells.length; j++)
-          {
-            if (cells[j]) {
-              // Remove highlight from all cells in row
-              cells[j].classList.remove('dealer-column-highlight');
-            }
+        for (let j = 0; j < cells.length; j++)
+        {
+          if (cells[j]) {
+            // Remove highlight from all cells in row
+            cells[j].classList.remove('dealer-column-highlight');
           }
-          
-          if (cells[dealerIndex + 1]) { // +1 because first cell is row number label
-            // Add highlight to the dealer column cells
-            cells[dealerIndex + 1].classList.add('dealer-column-highlight');
-          }
+        }
+        
+        if (cells[dealerIndex + 1]) { // +1 because first cell is row number label
+          // Add highlight to the dealer column cells
+          cells[dealerIndex + 1].classList.add('dealer-column-highlight');
         }
       }
     }
   }
 
+  /// <summary>
+  ///   Highlight the row representing the current round.
+  /// </summary>
+  /// <param name="roundNumber">The current round number. Op out if out of bounds.</param>
   const highlightCurrentRoundRow = (roundNumber: number) => {
     const tBody = document.getElementById('tbody');
     const tRows = tBody?.getElementsByTagName('tr');
@@ -458,9 +483,9 @@ function BasicScoresheet() {
       <div style={{marginLeft: showColTotals ? 22 : 0}}>
         { currentGame.isGameOver ?
           <div className='table-subtitle'>The game has ended</div> :
-            currentGame.currRound == 11 ? 
+            isFinalRound() === true ? 
               <div style={{ marginTop: '0.7em' }}>
-                <PrimaryButton onClick={handleEndGameClicked}>
+                <PrimaryButton onClick={triggerEndGame}>
                   End Game
                 </PrimaryButton>
               </div> : 

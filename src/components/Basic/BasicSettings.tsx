@@ -157,7 +157,7 @@ function BasicSettings() {
         {endCondition === endConditions[1] &&
           <div className="setting-row">
             <div className="setting-label">
-              WINNING CONDITION
+              PLAYER WINS IF
             </div>
             <div className="setting-control">
               <select 
