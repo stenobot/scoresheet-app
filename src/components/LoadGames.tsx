@@ -22,27 +22,36 @@ const navigate = useNavigate();
 
   const handleLoadClick = () => {
     switch (currentGame.gameType) {
-    case gameTypes[0]: // Basic Scoresheet
-    case gameTypes[1]: // Progressive Rook
-      if (isEmpty(currentGame.settings))
-      {
-        navigate('prog-settings');
-      }
-      else
-      {
-        navigate('/prog-scoresheet');
-      }       
-      break;
-    case gameTypes[2]: // Mahjong
-      if (isEmpty(currentGame.settings))
-      {
-        navigate('mahjong-settings-players');
-      }
-      else
-      {
-        navigate('/mahjong-scoresheet');
-      }  
-      break;
+      case gameTypes[0]: // Basic Scoresheet
+        if (isEmpty(currentGame.settings))
+        {
+          navigate('basic-settings');
+        }
+        else
+        {
+          navigate('/basic-scoresheet');
+        }       
+        break;
+      case gameTypes[1]: // Progressive Rook
+        if (isEmpty(currentGame.settings))
+        {
+          navigate('prog-settings');
+        }
+        else
+        {
+          navigate('/prog-scoresheet');
+        }       
+        break;
+      case gameTypes[2]: // Mahjong
+        if (isEmpty(currentGame.settings))
+        {
+          navigate('mahjong-settings-players');
+        }
+        else
+        {
+          navigate('/mahjong-scoresheet');
+        }  
+        break;
     }
   }
   

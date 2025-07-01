@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
-import { gameTypes, useGameContext } from '../../contexts/GameContext';
-import { useBasicSettingsContext } from '../../contexts/BasicSettingsContext';
+import { useGameContext } from '../../contexts/GameContext';
+import { useBasicSettingsContext, endConditions, winConditions } from '../../contexts/BasicSettingsContext';
 
 function BasicSettings() {
   const { currentGame, setCurrentGame } = useGameContext();
@@ -12,8 +12,14 @@ function BasicSettings() {
     setStartingRowNum, 
     showColTotals, 
     setShowColTotals, 
+    endCondition,
+    setEndCondition,
+    winCondition,
+    setWinCondition,
     winningScore,
-    setWinningScore
+    setWinningScore,
+    finalRound,
+    setFinalRound
   } = useBasicSettingsContext();
 
   const navigate = useNavigate();
@@ -35,14 +41,18 @@ function BasicSettings() {
       showRowNums,
       startingRowNum,
       showColTotals,
-      winningScore
+      endCondition,
+      winCondition,
+      winningScore,
+      finalRound
     };
 
     // Set current game with settings and first player as dealer
     setCurrentGame({
       ...currentGame,
       settings: JSON.stringify(basicSettings),
-      currDealer: currentGame.players[0]
+      currDealer: currentGame.players[0],
+      currLeader: currentGame.players[0]
     });
     
     console.log(`handleStartClick - settings saved: ${JSON.stringify(basicSettings)}`);
@@ -106,19 +116,63 @@ function BasicSettings() {
 
         <div className="setting-row">
           <div className="setting-label">
-            WINNING SCORE
+            GAME ENDS WHEN
+          </div>
+          <div className="setting-control">
+            <select 
+              className='setting-dropdown'
+              value={endCondition}
+              onChange={e => setEndCondition(e.target.value as any)}>
+              {endConditions.map((condition) => (
+                <option key={condition} value={condition}>
+                  {condition}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <div className="setting-row">
+          <div className="setting-label">
+            {endCondition === endConditions[0] ? 'WINNING SCORE' : 'FINAL ROUND'}
           </div>
           <div className="setting-control">
             <input 
               className='setting-input' 
               type='number' 
-              value={winningScore}
+              value={endCondition === endConditions[0] ? winningScore : finalRound}
               onClick={(e: React.MouseEvent<HTMLInputElement>) => {
                 e.currentTarget.select();
               }}
-              onChange={e => setWinningScore(Number(e.target.value))} />
+              onChange={e => {
+                if (endCondition === endConditions[0]) {
+                  setWinningScore(Number(e.target.value));
+                } else {
+                  setFinalRound(Number(e.target.value));
+                }
+              }} />
           </div>
         </div>
+
+        {endCondition === endConditions[1] &&
+          <div className="setting-row">
+            <div className="setting-label">
+              PLAYER WINS IF
+            </div>
+            <div className="setting-control">
+              <select 
+                className='setting-dropdown'
+                value={winCondition}
+                onChange={e => setWinCondition(e.target.value as any)}>
+                {winConditions.map((condition) => (
+                  <option key={condition} value={condition}>
+                    {condition}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        }
 
         <div className="setting-row-fixed">
           <div className="setting-label">

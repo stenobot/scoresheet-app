@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext } from '../../contexts/GameContext';
-import { useBasicSettingsContext } from '../../contexts/BasicSettingsContext';
+import { endConditions, useBasicSettingsContext, winConditions } from '../../contexts/BasicSettingsContext';
 
 function BasicScoresheet() { 
   const { currentGame, setCurrentGame } = useGameContext();
@@ -10,14 +10,18 @@ function BasicScoresheet() {
   const { 
     showRowNums, 
     startingRowNum, 
-    showColTotals } = useBasicSettingsContext();
+    showColTotals,
+    winCondition, 
+    endCondition,
+    winningScore,
+    finalRound
+  } = useBasicSettingsContext();
 
   const navigate = useNavigate();
 
   // initial column totals values to set below arrays
   const initialColTotals = Array.from(currentGame.players.keys()).map( () => 0);
   
-
   // create array of column totals for the footer
   const [footerValues, setFooterValues] = useState(
     // if show row numbers is selected, add extra blank "" element for row number label column 
@@ -28,7 +32,7 @@ function BasicScoresheet() {
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
 
-  
+
   /// <summary>
   ///   Adds a new row and other functions when Next Round button is clicked.
   /// </summary>
@@ -39,11 +43,26 @@ function BasicScoresheet() {
     // Create a new scores array with an additional empty array for the new round
     const newScores = currentGame.scores.map(playerScores => [...playerScores, 0]);
 
+    // Check if the winning score has been reached
+    if (currentGame.scores.some(playerScores =>
+      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0) >= winningScore
+    )) {
+      // We have reached the winning score, trigger end game
+      triggerEndGame();
+      return;
+    }
+
+    // Set the current leader based on the new scores
+    const currLeader = calculateLeader(newScores.map(playerScores =>
+      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+    ));
+    
     setCurrentGame({
       ...currentGame,
       currRound: newRound,
       currDealer: newDealer,
-      scores: newScores
+      scores: newScores,
+      currLeader: currLeader
     });
 
     addTableRow(newRound - 1);
@@ -53,19 +72,46 @@ function BasicScoresheet() {
   }
 
   /// <summary>
+  ///   Calculates the leader based on the win condition.
+  /// </summary>
+  /// <param name="columnTotals">The column totals to calculate the leader from</param>
+  /// <returns>The leader's name</returns>
+  const calculateLeader = (columnTotals: (string | number)[]) => {
+    // Filter out any string values (like the empty string for row numbers column)
+    const scores = columnTotals.filter(value => typeof value === 'number') as number[];
+    const maxScore = Math.max(...scores);
+    const minScore = Math.min(...scores);
+    const leaderIndex = winCondition === winConditions[0] ? scores.indexOf(maxScore) : scores.indexOf(minScore);
+    return currentGame.players[leaderIndex];
+  };
+
+  /// <summary>
+  ///   Checks if the current round is the final round.
+  /// </summary>
+  /// <returns>True if the current round is the final round, false otherwise</returns>
+  const isFinalRound = () => {
+    return currentGame.currRound >= finalRound && endCondition === endConditions[1];
+  }
+
+  /// <summary>
   ///   End the game by freezing the input cells, declaring the winner, and hiding this button
   /// </summary>
-  const handleEndGameClicked = () => {
+  const triggerEndGame = () => {
+    // Set the current leader based on the new scores
+    const currLeader = calculateLeader(currentGame.scores.map(playerScores =>
+      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+    ));
     setCurrentGame({
       ...currentGame,
       isGameOver: true,
+      currLeader: currLeader
     });
 
     // Feed index that is way out of bounds to remove all highlighting
     highlightCurrentRoundRow(99);
     highlightDealerColumn(99);
 
-    // TODO: calculate and set current leader based on scores
+    // TODO: end game based on winning score
   }
   
   /// <summary>
@@ -113,47 +159,56 @@ function BasicScoresheet() {
     }
   }
 
+  /// <summary>
+  ///   Highlight the column of the current dealer.
+  /// </summary>
+  /// <param name="dealerIndex">The index of the dealer in the players array. Op out if out of bounds.</param>
   const highlightDealerColumn = (dealerIndex: number) => { 
-    if (dealerIndex !== -1) {
-      // Get all table header cells
-      const headerTableRow = document.getElementById('theadtrow');
-      const headerCells = headerTableRow?.getElementsByTagName('th');
+    if (dealerIndex < 0 || dealerIndex >= currentGame.players.length) {
+      return;
+    }
+    // Get all table header cells
+    const headerTableRow = document.getElementById('theadtrow');
+    const headerCells = headerTableRow?.getElementsByTagName('th');
 
-      // Get all table rows
-      const tBody = document.getElementById('tbody');
-      const tRows = tBody?.getElementsByTagName('tr');
-      
-      // Set highlight on dealer column in header
-      if (headerCells) {
-        for (let i = 0; i < headerCells.length; i++) {
-          headerCells[i].classList.remove('dealer-column-highlight');
-        }
-        headerCells[dealerIndex + 1].classList.add('dealer-column-highlight');
+    // Get all table rows
+    const tBody = document.getElementById('tbody');
+    const tRows = tBody?.getElementsByTagName('tr');
+    
+    // Set highlight on dealer column in header
+    if (headerCells) {
+      for (let i = 0; i < headerCells.length; i++) {
+        headerCells[i].classList.remove('dealer-column-highlight');
       }
+      headerCells[dealerIndex + 1].classList.add('dealer-column-highlight');
+    }
 
-      // Set highlight on dealer column in body
-      if (tRows) {
-        for (let i = 0; i < tRows.length; i++) {
-          const row = tRows[i];
-          const cells = row.getElementsByTagName('td');
+    // Set highlight on dealer column in body
+    if (tRows) {
+      for (let i = 0; i < tRows.length; i++) {
+        const row = tRows[i];
+        const cells = row.getElementsByTagName('td');
 
-          for (let j = 0; j < cells.length; j++)
-          {
-            if (cells[j]) {
-              // Remove highlight from all cells in row
-              cells[j].classList.remove('dealer-column-highlight');
-            }
+        for (let j = 0; j < cells.length; j++)
+        {
+          if (cells[j]) {
+            // Remove highlight from all cells in row
+            cells[j].classList.remove('dealer-column-highlight');
           }
-          
-          if (cells[dealerIndex + 1]) { // +1 because first cell is row number label
-            // Add highlight to the dealer column cells
-            cells[dealerIndex + 1].classList.add('dealer-column-highlight');
-          }
+        }
+        
+        if (cells[dealerIndex + 1]) { // +1 because first cell is row number label
+          // Add highlight to the dealer column cells
+          cells[dealerIndex + 1].classList.add('dealer-column-highlight');
         }
       }
     }
   }
 
+  /// <summary>
+  ///   Highlight the row representing the current round.
+  /// </summary>
+  /// <param name="roundNumber">The current round number. Op out if out of bounds.</param>
   const highlightCurrentRoundRow = (roundNumber: number) => {
     const tBody = document.getElementById('tbody');
     const tRows = tBody?.getElementsByTagName('tr');
@@ -262,7 +317,7 @@ function BasicScoresheet() {
   ///   Handles input in a cell to limit the number of characters to 4.
   /// </summary>
   /// <param name="e">Event</param>
-  const handleCellInput = (e: React.FormEvent<HTMLElement>) => {
+  const handleHeaderCellInput = (e: React.FormEvent<HTMLElement>, i: number) => {
     const maxChars = 4;
     const el = e.currentTarget;
     if (el.textContent && el.textContent.length > maxChars) {
@@ -275,6 +330,14 @@ function BasicScoresheet() {
       sel?.removeAllRanges();
       sel?.addRange(range);
     }
+
+    const newPlayers = [...currentGame.players];
+    newPlayers[i] = e.currentTarget.textContent ?? '';
+    console.log(`changeName - newPlayers: ${newPlayers}`);
+    setCurrentGame({
+      ...currentGame,
+      players: newPlayers
+    });
   };
 
   /// <summary>
@@ -353,8 +416,17 @@ function BasicScoresheet() {
           <h2 style={{marginLeft: showColTotals ? 22 : 0}} className='table-title'>{currentGame.title}</h2>
           <h6 style={{marginLeft: showColTotals ? 22 : 0}} className='table-subtitle'>
             {currentGame.isGameOver ?
-              <div>{currentGame.currLeader} is the winner!</div> : 
-              <div>{currentGame.currRound} rounds played</div>
+              <div>{currentGame.currLeader} wins!</div> : 
+              <div>
+                <span style={{color: 'white'}}>Round: </span>
+                {currentGame.currRound}
+                {currentGame.currRound > 1 && (
+                  <>
+                    <span style={{color: 'white'}}>, Current leader: </span>
+                    {currentGame.currLeader}
+                  </>
+                )}
+              </div>
             }
           </h6>
         </caption>
@@ -363,10 +435,13 @@ function BasicScoresheet() {
             { showRowNums === false ? 
                 Array.from(currentGame.players.keys()).map( i => 
                   <th 
+                    className={getTableHeaderClass()}
                     contentEditable 
+                    onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
+                    onInput={ e => handleHeaderCellInput(e, i)}
                     suppressContentEditableWarning={true} 
-                    spellCheck={false} key={i} 
-                    className={getTableHeaderClass()}>{currentGame.players[i]}
+                    spellCheck={false} 
+                    key={i}>{currentGame.players[i]}
                   </th>
                 ) : 
                 Array.from(Array(currentGame.players.length + 1).keys()).map( i => {
@@ -376,7 +451,7 @@ function BasicScoresheet() {
                         className={getTableHeaderClass()}
                         contentEditable
                         onKeyUp={e => changeName((e.currentTarget.textContent ?? ''), i - 1)}
-                        onInput={handleCellInput}
+                        onInput={e => handleHeaderCellInput(e, i - 1)}
                         suppressContentEditableWarning={true}
                         spellCheck={false}
                         key={i}>{currentGame.players[i - 1]}</th>}
@@ -408,9 +483,9 @@ function BasicScoresheet() {
       <div style={{marginLeft: showColTotals ? 22 : 0}}>
         { currentGame.isGameOver ?
           <div className='table-subtitle'>The game has ended</div> :
-            currentGame.currRound == 11 ? 
+            isFinalRound() === true ? 
               <div style={{ marginTop: '0.7em' }}>
-                <PrimaryButton onClick={handleEndGameClicked}>
+                <PrimaryButton onClick={triggerEndGame}>
                   End Game
                 </PrimaryButton>
               </div> : 
