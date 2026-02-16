@@ -9,10 +9,21 @@ function ProgScoresheet() {
 
   const { 
     showRowNums, 
+    setShowRowNums,
     startingRowNum, 
-    showColTotals } = useProgSettingsContext();
+    showColTotals,
+    setShowColTotals,
+    showGameTitle,
+    setShowGameTitle,
+    showRoundDescription,
+    setShowRoundDescription,
+    showRowLabels,
+    setShowRowLabels } = useProgSettingsContext();
 
   const navigate = useNavigate();
+
+  // We need an extra column for either row number or row labels
+  const showLabelColumn = showRowNums || showRowLabels;
 
   // initial column totals values to set below arrays
   const initialColTotals = Array.from(currentGame.players.keys()).map( () => 0);
@@ -22,7 +33,7 @@ function ProgScoresheet() {
     // if show row numbers is selected, add extra blank "" element for row number label column 
     // to beginning of initial array to ensure that array.map to UI works correctly.
     // this variable extra element also needs to be accounted for when array is updated
-    showRowNums ? ["", ...initialColTotals] : initialColTotals);
+    showLabelColumn ? ["", ...initialColTotals] : initialColTotals);
 
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
@@ -84,7 +95,7 @@ function ProgScoresheet() {
       
       if (cells) {
         // Loop through cells in the second to last row
-        const playerOffset = showRowNums ? 1 : 0;
+        const playerOffset = showLabelColumn ? 1 : 0;
         for (let j = playerOffset; j < cells.length; j++) {
           const td = cells[j];
           
@@ -122,7 +133,7 @@ function ProgScoresheet() {
     const tBody = document.getElementById('tbody');
     const tRows = tBody?.getElementsByTagName('tr');
     if (tRows && tRows.length > 0) {
-      const newScores: number[][] = Array.from({ length: currentGame.players.length }, () => []);
+      const newScores: string[][] = Array.from({ length: currentGame.players.length }, () => []);
 
       // Loop through rows
       for (let i = 0; i < tRows.length; i++) {
@@ -130,7 +141,7 @@ function ProgScoresheet() {
         const cells = row.getElementsByTagName('td');
         if (cells) {
           // Loop through cells
-          const playerOffset = showRowNums ? 1 : 0;
+          const playerOffset = showLabelColumn ? 1 : 0;
           for (let j = playerOffset; j < cells.length; j++) {
             const td = cells[j];
             const playerIndex = j - playerOffset;
@@ -139,7 +150,7 @@ function ProgScoresheet() {
             if (Number.isInteger(Number(td.innerHTML)) || td.innerHTML === '-') {
               td.classList.add('normal-cell');
               td.classList.remove('normal-cell-bad-input');
-              const cellValue = Number(td.innerHTML);
+              const cellValue = td.innerHTML as string;
               newScores[playerIndex][i] = cellValue;
             }
             else {
@@ -173,7 +184,7 @@ function ProgScoresheet() {
         for (let i = 0; i < headerCells.length; i++) {
           headerCells[i].classList.remove('dealer-column-highlight');
         }
-        headerCells[dealerIndex + 1].classList.add('dealer-column-highlight');
+        headerCells[dealerIndex + (showLabelColumn ? 1 : 0)].classList.add('dealer-column-highlight');
       }
 
       // Set highlight on dealer column in body
@@ -190,9 +201,8 @@ function ProgScoresheet() {
             }
           }
           
-          if (cells[dealerIndex + 1]) { // +1 because first cell is row number label
-            // Add highlight to the dealer column cells
-            cells[dealerIndex + 1].classList.add('dealer-column-highlight');
+          if (cells[dealerIndex + (showLabelColumn ? 1 : 0)]) { // +1 when first cell is row number label
+            cells[dealerIndex + (showLabelColumn ? 1 : 0)].classList.add('dealer-column-highlight');
           }
         }
       }
@@ -215,7 +225,7 @@ function ProgScoresheet() {
       const rowIndex = roundNumber - 1;
       if (rowIndex >= 0 && rowIndex < tRows.length) {
         const cellsToHighlight = tRows[rowIndex].getElementsByTagName('td');
-        const startIndex = showRowNums ? 1 : 0;
+        const startIndex = showLabelColumn ? 1 : 0;
         for (let j = startIndex; j < cellsToHighlight.length; j++) {
           cellsToHighlight[j].classList.add('current-round-highlight');
         }
@@ -232,14 +242,14 @@ function ProgScoresheet() {
     const trBody = document.createElement('tr');
     for (let i = 0; i < currentGame.players.length + 1; i++) {
       if (i === 0) {
-        // add row number and description label first, if option selected
-        if (showRowNums) {
+        // add row number and description label first, if either option is selected
+        if (showLabelColumn) {
           const currRowNum = startingRowNum + rowNumRef.current;
           const td = document.createElement('td');
           if (roundIndex !== undefined) {
             td.innerHTML = 
-              `${currRowNum} 
-              <span class="round-description">${roundDescriptions[roundIndex][1]}</span>`;
+              `${showRowNums ? currRowNum : ""} 
+              <span class="round-description">${showRowLabels ? roundDescriptions[roundIndex][1] : ""}</span>`;
           }
           else {
             td.innerHTML = `${currRowNum}`;
@@ -266,7 +276,7 @@ function ProgScoresheet() {
         td.setAttribute('contenteditable', 'true');
         td.setAttribute('suppressContentEditableWarning', 'true');
         // default value is 0
-        const playerIndex = showRowNums ? i - 1 : i;
+        const playerIndex = showLabelColumn ? i - 1 : i;
         const score = (roundIndex !== undefined && currentGame.scores[playerIndex] && currentGame.scores[playerIndex][roundIndex] !== undefined)
           ? currentGame.scores[playerIndex][roundIndex]
           : 0;
@@ -375,16 +385,25 @@ function ProgScoresheet() {
   useEffect(() => {
     if (currentGame.scores && currentGame.scores.length > 0) {
       const columnTotals = currentGame.scores.map(playerScores =>
-        playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+        playerScores.reduce((sum: number, current) => sum + (isNaN(Number(current)) ? 0 : Number(current)), 0)
       );
 
-      if (showRowNums) {
+      if (showLabelColumn) {
         setFooterValues(['', ...columnTotals]);
       } else {
         setFooterValues(columnTotals);
       }
     }
-  }, [currentGame.scores, showRowNums]);
+
+    if (currentGame.settings) {
+      const settings = JSON.parse(currentGame.settings);
+      if (settings.showRowNums !== undefined) setShowRowNums(settings.showRowNums);
+      if (settings.showColTotals !== undefined) setShowColTotals(settings.showColTotals);
+      if (settings.showGameTitle !== undefined) setShowGameTitle(settings.showGameTitle);
+      if (settings.showRoundDescription !== undefined) setShowRoundDescription(settings.showRoundDescription);
+      if (settings.showRowLabels !== undefined) setShowRowLabels(settings.showRowLabels);
+    }
+  }, [currentGame.scores, currentGame.settings, showLabelColumn]);
 
   useEffect(() => {
     if (didMountRef.current === false) {
@@ -410,19 +429,19 @@ function ProgScoresheet() {
   return (
     <div className="container">
       <table
-        className={ showRowNums ? 'table-with-row-nums' : 'table-no-row-nums' }>
+        className={ showLabelColumn ? 'table-with-row-nums' : 'table-no-row-nums' }>
         <caption>
-          <h2 style={{marginLeft: showColTotals ? 22 : 0}} className='table-title'>{currentGame.title}</h2>
+          {showGameTitle && <h2 style={{marginLeft: showColTotals ? 22 : 0}} className='table-title'>{currentGame.title}</h2>}
           <h6 style={{marginLeft: showColTotals ? 22 : 0}} className='table-subtitle'>
             {currentGame.isGameOver ?
               <div>{currentGame.currLeader} is the winner!</div> : 
-              <div>{roundDescriptions[currentGame.currRound - 1][0]}</div>
+              showRoundDescription && <div>{roundDescriptions[currentGame.currRound - 1][0]}</div>
             }
           </h6>
         </caption>
         <thead style={{ padding: '5px' }}>
           <tr id="theadtrow">
-            { showRowNums === false ? 
+            { showLabelColumn === false ? 
                 Array.from(currentGame.players.keys()).map( i => 
                   <th 
                     contentEditable 
@@ -453,7 +472,7 @@ function ProgScoresheet() {
         {showColTotals === true &&
           <tfoot>
             <tr>
-              {showRowNums === false ? 
+              {showLabelColumn === false ? 
                 footerValues.map( (footerValue, i) => 
                   <th key={i} className='normal-cell-footer'>{footerValue}</th>
                 ) : 
@@ -488,7 +507,6 @@ function ProgScoresheet() {
           </div>
         </label>
       </div>
-      {/* <p style={{ color: '#70aacb', fontSize: '20px'}}>(<kbd>Double-click</kbd> row to delete)</p> */}
     </div>
   );
 }

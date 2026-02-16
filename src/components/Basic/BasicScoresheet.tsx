@@ -9,12 +9,21 @@ function BasicScoresheet() {
 
   const { 
     showRowNums, 
+    setShowRowNums,
     startingRowNum, 
+    setStartingRowNum,
     showColTotals,
+    setShowColTotals,
+    showDealerInfo,
+    setShowDealerInfo,
     winCondition, 
+    setWinCondition,
     endCondition,
+    setEndCondition,
     winningScore,
-    finalRound
+    setWinningScore,
+    finalRound,
+    setFinalRound
   } = useBasicSettingsContext();
 
   const navigate = useNavigate();
@@ -32,7 +41,6 @@ function BasicScoresheet() {
   const didMountRef = useRef(false);
   const rowNumRef = useRef(0);
 
-
   /// <summary>
   ///   Adds a new row and other functions when Next Round button is clicked.
   /// </summary>
@@ -45,7 +53,7 @@ function BasicScoresheet() {
 
     // Check if the winning score has been reached
     if (currentGame.scores.some(playerScores =>
-      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0) >= winningScore
+      playerScores.reduce((sum: number, current) => sum + (isNaN(Number(current)) ? 0 : Number(current)), 0) >= Number(winningScore)
     )) {
       // We have reached the winning score, trigger end game
       triggerEndGame();
@@ -54,7 +62,7 @@ function BasicScoresheet() {
 
     // Set the current leader based on the new scores
     const currLeader = calculateLeader(newScores.map(playerScores =>
-      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+      playerScores.reduce((sum: number, current) => sum + (isNaN(Number(current)) ? 0 : Number(current)), 0)
     ));
     
     setCurrentGame({
@@ -99,7 +107,7 @@ function BasicScoresheet() {
   const triggerEndGame = () => {
     // Set the current leader based on the new scores
     const currLeader = calculateLeader(currentGame.scores.map(playerScores =>
-      playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+      playerScores.reduce((sum: number, current) => sum + (isNaN(Number(current)) ? 0 : Number(current)), 0)
     ));
     setCurrentGame({
       ...currentGame,
@@ -110,8 +118,6 @@ function BasicScoresheet() {
     // Feed index that is way out of bounds to remove all highlighting
     highlightCurrentRoundRow(99);
     highlightDealerColumn(99);
-
-    // TODO: end game based on winning score
   }
   
   /// <summary>
@@ -164,7 +170,7 @@ function BasicScoresheet() {
   /// </summary>
   /// <param name="dealerIndex">The index of the dealer in the players array. Op out if out of bounds.</param>
   const highlightDealerColumn = (dealerIndex: number) => { 
-    if (dealerIndex < 0 || dealerIndex >= currentGame.players.length) {
+    if (showDealerInfo === false || dealerIndex < 0 || dealerIndex >= currentGame.players.length) {
       return;
     }
     // Get all table header cells
@@ -376,7 +382,7 @@ function BasicScoresheet() {
   useEffect(() => {
     if (currentGame.scores && currentGame.scores.length > 0) {
       const columnTotals = currentGame.scores.map(playerScores =>
-        playerScores.reduce((sum, current) => sum + (Number(current) || 0), 0)
+        playerScores.reduce((sum: number, current) => sum + (isNaN(Number(current)) ? 0 : Number(current)), 0)
       );
 
       if (showRowNums) {
@@ -385,7 +391,19 @@ function BasicScoresheet() {
         setFooterValues(columnTotals);
       }
     }
-  }, [currentGame.scores, showRowNums]);
+
+    if (currentGame.settings) {
+      const settings = JSON.parse(currentGame.settings);
+      if (settings.showRowNums !== undefined) setShowRowNums(settings.showRowNums);
+      if (settings.startingRowNum !== undefined) setStartingRowNum(settings.startingRowNum);
+      if (settings.showColTotals !== undefined) setShowColTotals(settings.showColTotals);
+      if (settings.showDealerInfo !== undefined) setShowDealerInfo(settings.showDealerInfo);
+      if (settings.endCondition !== undefined) setEndCondition(settings.endCondition);
+      if (settings.winCondition !== undefined) setWinCondition(settings.winCondition);
+      if (settings.winningScore !== undefined) setWinningScore(settings.winningScore);
+      if (settings.finalRound !== undefined) setFinalRound(settings.finalRound);
+    }
+  }, [currentGame.scores, currentGame.settings, showRowNums]);
 
   useEffect(() => {
     if (didMountRef.current === false) {

@@ -16,7 +16,7 @@ export interface Game {
   gameType: GameType;
   currRound: number;
   players: string[];
-  scores: number[][];
+  scores: (string | number)[][];
   currDealer: string;
   currLeader: string;
   isGameOver: boolean;

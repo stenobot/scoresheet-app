@@ -18,6 +18,7 @@ export interface ProgSettings {
   showRowNums: boolean;
   startingRowNum: number;
   showColTotals: boolean;
+  showDealerInfo: boolean;
   endCondition: EndCondition;
   winCondition: WinCondition;
   winningScore: number;
@@ -31,6 +32,8 @@ const BasicSettingsContext = createContext({
     setStartingRowNum: (startingRowNum: number) => {},
     showColTotals: false,
     setShowColTotals: (showColTotals: boolean) => {},
+    showDealerInfo: false,
+    setShowDealerInfo: (showDealerInfo: boolean) => {},
     endCondition: EndCondition.ScoreReached,
     setEndCondition: (endCondition: EndCondition) => {},
     winCondition: WinCondition.HighestScore,
@@ -45,6 +48,7 @@ const BasicSettingsContextProvider = (props: PropsWithChildren<{}>) => {
     const [showRowNums, setShowRowNums] = useState(true);
     const [startingRowNum, setStartingRowNum] = useState(1);
     const [showColTotals, setShowColTotals] = useState(true);
+    const [showDealerInfo, setShowDealerInfo] = useState(true);
     const [endCondition, setEndCondition] = useState(EndCondition.ScoreReached);
     const [winCondition, setWinCondition] = useState(WinCondition.HighestScore);
     const [winningScore, setWinningScore] = useState(50);
@@ -58,6 +62,8 @@ const BasicSettingsContextProvider = (props: PropsWithChildren<{}>) => {
             setStartingRowNum,
             showColTotals,
             setShowColTotals,
+            showDealerInfo,
+            setShowDealerInfo,
             endCondition,
             setEndCondition,
             winCondition,

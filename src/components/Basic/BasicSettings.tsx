@@ -12,6 +12,8 @@ function BasicSettings() {
     setStartingRowNum, 
     showColTotals, 
     setShowColTotals, 
+    showDealerInfo,
+    setShowDealerInfo,
     endCondition,
     setEndCondition,
     winCondition,
@@ -36,7 +38,7 @@ function BasicSettings() {
     });
   };
   const handleStartClick = () => {
-    // Create settings object
+    // Create basic settings object to store in game object
     const basicSettings = {
       showRowNums,
       startingRowNum,
@@ -176,7 +178,7 @@ function BasicSettings() {
 
         <div className="setting-row-fixed">
           <div className="setting-label">
-            SHOW COLUMN TOTALS
+            SHOW SCORE TOTALS
           </div>
           <div>
            <input 
@@ -187,7 +189,20 @@ function BasicSettings() {
           </div>
         </div>
 
-         <div className="setting-row-fixed">
+        <div className="setting-row">
+          <div className="setting-label">
+            HIGHLIGHT DEALER COLUMN
+          </div>
+          <div>
+            <input 
+              className='setting-checkbox' 
+              type='checkbox' 
+              checked={showDealerInfo}
+              onChange={e => setShowDealerInfo(e.target.checked)} />
+          </div>
+        </div>
+
+        <div className="setting-row-fixed">
           <div className="setting-label">
             SHOW ROW NUMBERS
           </div>
@@ -199,6 +214,7 @@ function BasicSettings() {
               onChange={e => setShowRowNums(e.target.checked)} />
           </div>
         </div>
+
         { showRowNums &&
           <div className="setting-row">
             <div className="setting-label">

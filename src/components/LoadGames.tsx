@@ -21,36 +21,49 @@ const navigate = useNavigate();
   }
 
   const handleLoadClick = () => {
+    // Parse settings from current game if they exist
+    if (!isEmpty(currentGame.settings)) {
+      try {
+        const settings = JSON.parse(currentGame.settings);
+        
+        switch (currentGame.gameType) {
+          case gameTypes[0]: // Basic Scoresheet
+            navigate('/basic-scoresheet');
+            break;
+            
+          case gameTypes[1]: // Progressive Rook
+            navigate('/prog-scoresheet');
+            break;
+            
+          case gameTypes[2]: // Mahjong
+            // if (settings.startingPlayerScore !== undefined) mahjongSettings.setStartingPlayerScore(settings.startingPlayerScore);
+            // if (settings.limitValue !== undefined) mahjongSettings.setLimitValue(settings.limitValue);
+            // if (settings.baseWinScore !== undefined) mahjongSettings.setBaseWinScore(settings.baseWinScore);
+            // if (settings.reignOfTerror !== undefined) mahjongSettings.setReignOfTerror(settings.reignOfTerror);
+            navigate('/mahjong-scoresheet');
+            break;
+        }
+      } catch (error) {
+        console.error('Error parsing settings:', error);
+        // If parsing fails, navigate to settings page
+        navigateToSettingsPage();
+      }
+    } else {
+      // No settings exist, navigate to settings page
+      navigateToSettingsPage();
+    }
+  }
+
+  const navigateToSettingsPage = () => {
     switch (currentGame.gameType) {
       case gameTypes[0]: // Basic Scoresheet
-        if (isEmpty(currentGame.settings))
-        {
-          navigate('basic-settings');
-        }
-        else
-        {
-          navigate('/basic-scoresheet');
-        }       
+        navigate('basic-settings');
         break;
       case gameTypes[1]: // Progressive Rook
-        if (isEmpty(currentGame.settings))
-        {
-          navigate('prog-settings');
-        }
-        else
-        {
-          navigate('/prog-scoresheet');
-        }       
+        navigate('prog-settings');
         break;
       case gameTypes[2]: // Mahjong
-        if (isEmpty(currentGame.settings))
-        {
-          navigate('mahjong-settings-players');
-        }
-        else
-        {
-          navigate('/mahjong-scoresheet');
-        }  
+        navigate('mahjong-settings-players');
         break;
     }
   }

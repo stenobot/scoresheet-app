@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
+import React, { useState } from 'react';
 
 function ProgSettings() {
   const { currentGame, setCurrentGame } = useGameContext();
@@ -9,11 +10,19 @@ function ProgSettings() {
     showRowNums, 
     setShowRowNums, 
     startingRowNum, 
-    setStartingRowNum, 
     showColTotals, 
-    setShowColTotals } = useProgSettingsContext();
+    setShowColTotals,
+    showGameTitle,
+    setShowGameTitle,
+    showRoundDescription,
+    setShowRoundDescription,
+    showRowLabels,
+    setShowRowLabels } = useProgSettingsContext();
 
   const navigate = useNavigate();
+
+  // Collapsible and checkbox state
+  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
   const handlePlayersChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPlayers = Number(e.target.value);
@@ -27,11 +36,14 @@ function ProgSettings() {
     });
   };
   const handleStartClick = () => {
-    // Create settings object
+    // Create prog-specific settings object to store in game object
     const progSettings = {
       showRowNums,
       startingRowNum,
-      showColTotals
+      showColTotals,
+      showGameTitle,
+      showRoundDescription,
+      showRowLabels
     };
 
     // Set current game with settings and first player as dealer
@@ -98,6 +110,91 @@ function ProgSettings() {
             </div>
           </div>
         </div>
+
+        {/* Collapsible Advanced Settings Row */}
+        <div className="setting-row">
+          <div className="setting-label">
+            <button
+              type="button"
+              className="setting-label-collapsible"
+              style={{ cursor: 'pointer', background: 'none', border: 'none', padding: 0, fontWeight: 'bold' }}
+              onClick={() => setShowAdvancedSettings((prev) => !prev)}
+              aria-expanded={showAdvancedSettings}
+              aria-controls="test-settings-content"
+            >
+              {showAdvancedSettings ? '▼' : '►'} ADVANCED SETTINGS
+            </button>
+          </div>
+          <div className="setting-control" style={{ width: '100%' }}>
+            {showAdvancedSettings && (
+              <div id="test-settings-content" style={{ marginTop: 10, paddingLeft: 10 }}>
+                <p className='setting-small-header'>SHOW/HIDE IN ROWS:</p>
+                <label style={{ display: 'block', marginBottom: 8 }}>
+                  <input 
+                    className='setting-checkbox' 
+                    type='checkbox' 
+                    checked={showRowNums}
+                    onChange={() => setShowRowNums(!showRowNums)} 
+                    style={{ marginRight: 8 }}
+                  />
+                  <span className="setting-label" style={{ marginLeft: 8 }}>
+                    ROUND NUMBERS
+                  </span>
+                </label>
+                <label style={{ display: 'block', marginBottom: 8 }}>
+                  <input
+                    className='setting-checkbox' 
+                    type='checkbox' 
+                    checked={showRowLabels}
+                    onChange={() => setShowRowLabels(!showRowLabels)}
+                    style={{ marginRight: 8 }}
+                  />
+                  <span className="setting-label" style={{ marginLeft: 8 }}>
+                    ROUND LABELS
+                  </span>
+                </label>
+                <p className='setting-small-header'>SHOW/HIDE IN COLUMNS:</p>
+                <label style={{ display: 'block', marginBottom: 8 }}>
+                  <input
+                    className='setting-checkbox' 
+                    type='checkbox' 
+                    checked={showColTotals}
+                    onChange={() => setShowColTotals(!showColTotals)}
+                    style={{ marginRight: 8 }}
+                  />
+                  <span className="setting-label" style={{ marginLeft: 8 }}>
+                    SCORE TOTALS
+                  </span>
+                </label>
+                <p className='setting-small-header'>SHOW/HIDE IN HEADER:</p>
+                <label style={{ display: 'block', marginBottom: 8 }}>
+                  <input
+                    className='setting-checkbox' 
+                    type='checkbox' 
+                    checked={showGameTitle}
+                    onChange={() => setShowGameTitle(!showGameTitle)}
+                    style={{ marginRight: 8 }}
+                  />
+                  <span className="setting-label" style={{ marginLeft: 8 }}>
+                    GAME TITLE
+                  </span>
+                </label>
+                <label style={{ display: 'block', marginBottom: 8 }}>
+                  <input
+                    className='setting-checkbox' 
+                    type='checkbox' 
+                    checked={showRoundDescription}
+                    onChange={() => setShowRoundDescription(!showRoundDescription)}
+                    style={{ marginRight: 8 }}
+                  />
+                  <span className="setting-label" style={{ marginLeft: 8 }}>
+                    ROUND DESCRIPTION
+                  </span>
+                </label>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <div style={{ marginBottom: '20px' }}>
@@ -106,7 +203,7 @@ function ProgSettings() {
         </PrimaryButton>
       </div>
 
-      <label>   
+      <label>
         <div style={{marginTop: 10}}>
           <a className='link' onClick={handleHomeClick}>Home</a>
         </div>
