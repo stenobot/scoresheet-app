@@ -5,7 +5,7 @@ import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 import React, { useState } from 'react';
 
 function ProgSettings() {
-  const { currentGame, setCurrentGame } = useGameContext();
+  const { currentGame, setCurrentGame, updateGame } = useGameContext();
   const { 
     showRowNums, 
     setShowRowNums, 
@@ -47,7 +47,7 @@ function ProgSettings() {
     };
 
     // Set current game with settings and first player as dealer
-    setCurrentGame({
+    updateGame({
       ...currentGame,
       settings: JSON.stringify(progSettings),
       currDealer: currentGame.players[0]

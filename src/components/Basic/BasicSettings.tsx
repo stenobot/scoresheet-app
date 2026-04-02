@@ -4,7 +4,7 @@ import { useGameContext } from '../../contexts/GameContext';
 import { useBasicSettingsContext, endConditions, winConditions } from '../../contexts/BasicSettingsContext';
 
 function BasicSettings() {
-  const { currentGame, setCurrentGame } = useGameContext();
+  const { currentGame, setCurrentGame, updateGame } = useGameContext();
   const { 
     showRowNums, 
     setShowRowNums, 
@@ -50,7 +50,7 @@ function BasicSettings() {
     };
 
     // Set current game with settings and first player as dealer
-    setCurrentGame({
+    updateGame({
       ...currentGame,
       settings: JSON.stringify(basicSettings),
       currDealer: currentGame.players[0],
