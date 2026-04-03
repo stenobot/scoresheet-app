@@ -65,7 +65,7 @@ function Start() {
         <label>
           <select
             className='setting-dropdown'
-            style={{ fontSize: '40px', height: '60px' }}
+            style={{ fontSize: '40px', padding: '10px 4px' }}
             value={newGame.gameType}
             onChange={e => setNewGame({
               ...newGame,
