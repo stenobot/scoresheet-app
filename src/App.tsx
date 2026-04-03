@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Start from './components/Start';
 import ProgScoresheet from './components/ProgressiveRook/ProgScoresheet';
