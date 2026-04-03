@@ -3,9 +3,9 @@ import { isEmpty } from '../utils/Utils';
 import { useLocation } from 'react-router-dom';
 
 export enum GameType {
-  Basic = 'Basic Scoresheet',
   ProgressiveRook = 'Progressive Rook',
-  Mahjong = 'Mahjong'
+  Mahjong = 'Mahjong',
+  Basic = 'Basic Scoresheet'
 };
 
 export const gameTypes = Object.values(GameType);

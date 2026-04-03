@@ -32,13 +32,13 @@ function Start() {
     addGame(newGame);
 
     switch (newGame.gameType) {
-      case gameTypes[0]: // Basic Scoresheet
+      case GameType.Basic: // Basic Scoresheet
         navigate('/basic-settings');
         break;
-      case gameTypes[1]: // Progressive Rook
+      case GameType.ProgressiveRook: // Progressive Rook
         navigate('/prog-settings');
         break;
-      case gameTypes[2]: // Mahjong
+      case GameType.Mahjong: // Mahjong
         navigate('/mahjong-settings-players');
         break;
     }

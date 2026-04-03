@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useGameContext, Game, gameTypes } from '../contexts/GameContext';
+import { useGameContext, Game, GameType, gameTypes } from '../contexts/GameContext';
 import { isEmpty } from '../utils/Utils';
 
 function LoadGames() {
@@ -26,15 +26,15 @@ const navigate = useNavigate();
         JSON.parse(currentGame.settings); // validate JSON
 
         switch (currentGame.gameType) {
-          case gameTypes[0]: // Basic Scoresheet
+          case GameType.Basic: // Basic Scoresheet
             navigate('/basic-scoresheet');
             break;
             
-          case gameTypes[1]: // Progressive Rook
+          case GameType.ProgressiveRook: // Progressive Rook
             navigate('/prog-scoresheet');
             break;
             
-          case gameTypes[2]: // Mahjong
+          case GameType.Mahjong: // Mahjong
             navigate('/mahjong-scoresheet');
             break;
         }
@@ -51,13 +51,13 @@ const navigate = useNavigate();
 
   const navigateToSettingsPage = () => {
     switch (currentGame.gameType) {
-      case gameTypes[0]: // Basic Scoresheet
+      case GameType.Basic: // Basic Scoresheet
         navigate('basic-settings');
         break;
-      case gameTypes[1]: // Progressive Rook
+      case GameType.ProgressiveRook: // Progressive Rook
         navigate('prog-settings');
         break;
-      case gameTypes[2]: // Mahjong
+      case GameType.Mahjong: // Mahjong
         navigate('mahjong-settings-players');
         break;
     }

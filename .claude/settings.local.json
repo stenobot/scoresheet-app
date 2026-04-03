@@ -5,7 +5,16 @@
       "Bash(echo \"exit: $?\")",
       "Bash(npm config:*)",
       "Bash(env)",
-      "Bash(npx react-scripts:*)"
+      "Bash(npx react-scripts:*)",
+      "Bash(npm audit:*)",
+      "Bash(grep -v \"^\\\\.$\\\\|^\\\\.\\\\.$\")",
+      "Bash(wc -l /c/Users/steno/repos/scoresheet-app/src/**/*.tsx /c/Users/steno/repos/scoresheet-app/src/**/*.ts)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(npx vitest:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(rm:*)"
     ]
   }
 }

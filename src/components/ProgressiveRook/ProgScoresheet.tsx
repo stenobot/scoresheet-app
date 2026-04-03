@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import PrimaryButton from '../PrimaryButton';
-import { useGameContext, gameTypes } from '../../contexts/GameContext';
+import { useGameContext, GameType, gameTypes } from '../../contexts/GameContext';
 import { useProgSettingsContext } from '../../contexts/ProgSettingsContext';
 
 function ProgScoresheet() { 
@@ -257,7 +257,7 @@ function ProgScoresheet() {
 
           // special rule for Progressive Rook preset,
           // where row 12 is doubled
-          if (currentGame.gameType === gameTypes[1] && 
+          if (currentGame.gameType === GameType.ProgressiveRook && 
             currRowNum === 12 &&
             rowNumDoubleTwelveRuleAppliedRef.current === false) {
             rowNumDoubleTwelveRuleAppliedRef.current = true;
