@@ -119,11 +119,13 @@ export const GameContextProvider = ({ children }: PropsWithChildren<{}>) => {
 
   // Update localStorage whenever current game changes
   useEffect(() => {
-    const updatedGames = games.map(game =>
-      game.id === currentGame.id ? currentGame : game
-    );
-    setGames(updatedGames);
-    saveGameToLocalStorage(currentGame, updatedGames);
+    setGames(prev => {
+      const updatedGames = prev.map(game =>
+        game.id === currentGame.id ? currentGame : game
+      );
+      saveGameToLocalStorage(currentGame, updatedGames);
+      return updatedGames;
+    });
   }, [currentGame, location]);
 
   return (

@@ -245,7 +245,7 @@ function BasicSettings() {
 
       <label>   
         <div style={{marginTop: 10}}>
-          <a className='link' onClick={handleHomeClick}>Home</a>
+          <button className='link' onClick={handleHomeClick}>Home</button>
         </div>
       </label>
     </div>

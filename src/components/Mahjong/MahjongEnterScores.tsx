@@ -355,12 +355,12 @@ function MahjongEnterScores({ players, settings, onConfirm, onCancel }: Props) {
 
         {/* Navigation */}
         <div style={{ display: 'flex', gap: '16px', marginTop: '20px', alignItems: 'center', justifyContent: 'center' }}>
-          <a
+          <button
             className="link"
             style={{ cursor: 'pointer' }}
             onClick={step === 1 ? onCancel : handleBack}>
             {step === 1 ? 'Cancel' : 'Back'}
-          </a>
+          </button>
           {step < 4 ? (
             <button
               className="primary-button"

@@ -4,7 +4,8 @@
       "Bash(npm start:*)",
       "Bash(echo \"exit: $?\")",
       "Bash(npm config:*)",
-      "Bash(env)"
+      "Bash(env)",
+      "Bash(npx react-scripts:*)"
     ]
   }
 }

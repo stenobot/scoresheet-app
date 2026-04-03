@@ -403,7 +403,7 @@ function ProgScoresheet() {
       if (settings.showRoundDescription !== undefined) setShowRoundDescription(settings.showRoundDescription);
       if (settings.showRowLabels !== undefined) setShowRowLabels(settings.showRowLabels);
     }
-  }, [currentGame.scores, currentGame.settings, showLabelColumn]);
+  }, [currentGame.scores, currentGame.settings, showLabelColumn, setShowRowNums, setShowColTotals, setShowGameTitle, setShowRoundDescription, setShowRowLabels]);
 
   useEffect(() => {
     if (didMountRef.current === false) {
@@ -489,7 +489,7 @@ function ProgScoresheet() {
       <div style={{marginLeft: showColTotals ? 22 : 0}}>
         { currentGame.isGameOver ?
           <div className='table-subtitle'>The game has ended</div> :
-            currentGame.currRound == 11 ? 
+            currentGame.currRound === 11 ? 
               <div style={{ marginTop: '0.7em' }}>
                 <PrimaryButton onClick={handleEndGameClicked}>
                   End Game
@@ -503,7 +503,7 @@ function ProgScoresheet() {
         }
         <label>
           <div style={{marginTop: 10}}>
-            <a className='link' onClick={handleHomeClick}>Home</a>
+            <button className='link' onClick={handleHomeClick}>Home</button>
           </div>
         </label>
       </div>

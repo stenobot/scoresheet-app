@@ -9,8 +9,7 @@ import {
   MahjongRoundRecord,
   advanceDealer,
   isGameOver,
-  getPlayerWind,
-  calculateScoreDeltas
+  getPlayerWind
 } from '../../utils/MahjongUtils';
 
 function MahjongScoresheet() {
@@ -170,7 +169,7 @@ function MahjongScoresheet() {
           </PrimaryButton>
         )}
         <div style={{ marginTop: 10 }}>
-          <a className="link" onClick={() => navigate('/')}>Home</a>
+          <button className="link" onClick={() => navigate('/')}>Home</button>
         </div>
       </div>
 

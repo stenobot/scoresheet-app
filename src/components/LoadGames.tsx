@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import PrimaryButton from './PrimaryButton';
 import { useGameContext, Game, gameTypes } from '../contexts/GameContext';
 import { isEmpty } from '../utils/Utils';
 
@@ -24,8 +23,8 @@ const navigate = useNavigate();
     // Parse settings from current game if they exist
     if (!isEmpty(currentGame.settings)) {
       try {
-        const settings = JSON.parse(currentGame.settings);
-        
+        JSON.parse(currentGame.settings); // validate JSON
+
         switch (currentGame.gameType) {
           case gameTypes[0]: // Basic Scoresheet
             navigate('/basic-scoresheet');
@@ -111,7 +110,7 @@ const navigate = useNavigate();
       </label>
       <label>
         <div style={{marginTop: 10}}>
-          <a className='link' onClick={handleHomeClick}>Home</a>
+          <button className='link' onClick={handleHomeClick}>Home</button>
         </div>
       </label>
     </div>

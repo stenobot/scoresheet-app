@@ -403,7 +403,7 @@ function BasicScoresheet() {
       if (settings.winningScore !== undefined) setWinningScore(settings.winningScore);
       if (settings.finalRound !== undefined) setFinalRound(settings.finalRound);
     }
-  }, [currentGame.scores, currentGame.settings, showRowNums]);
+  }, [currentGame.scores, currentGame.settings, showRowNums, setShowRowNums, setStartingRowNum, setShowColTotals, setShowDealerInfo, setEndCondition, setWinCondition, setWinningScore, setFinalRound]);
 
   useEffect(() => {
     if (didMountRef.current === false) {
@@ -515,7 +515,7 @@ function BasicScoresheet() {
         }
         <label>
           <div style={{marginTop: 10}}>
-            <a className='link' onClick={handleHomeClick}>Home</a>
+            <button className='link' onClick={handleHomeClick}>Home</button>
           </div>
         </label>
       </div>
