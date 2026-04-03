@@ -2,9 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton';
 import { useGameContext } from '../../contexts/GameContext';
 import { useMahjongSettingsContext } from '../../contexts/MahjongSettingsContext';
+import { MahjongGameSettings } from '../../utils/MahjongUtils';
 
 function MahjongSettingsPlayers() {
-const { currentGame, setCurrentGame, addGame } = useGameContext();
+const { currentGame, setCurrentGame, updateGame } = useGameContext();
   const { 
     startingPlayerScore,
     setStartingPlayerScore,
@@ -37,6 +38,25 @@ const { currentGame, setCurrentGame, addGame } = useGameContext();
   };
 
   const handleStartClick = () => {
+    const mahjongSettings: MahjongGameSettings = {
+      startingPlayerScore,
+      limitValue,
+      baseWinScore,
+      reignOfTerrorLimit: reignOfTerror,
+      dealerIndex: 0,
+      consecutiveWins: 0,
+      timesDealerWon: 0,
+      prevailingWind: 'East',
+      roundHistory: []
+    };
+    updateGame({
+      ...currentGame,
+      settings: JSON.stringify(mahjongSettings),
+      currDealer: currentGame.players[0],
+      currLeader: currentGame.players[0],
+      scores: [[], [], [], []],
+      currRound: 1
+    });
     navigate('/mahjong-scoresheet');
   };
 
@@ -49,6 +69,7 @@ const { currentGame, setCurrentGame, addGame } = useGameContext();
             <span className='mahjong-tile-name'>SOUTH</span>
             <input 
               className='mahjong-tile-input'
+              maxLength={6}
               name="southNameInput"
               defaultValue={currentGame.players[3] || 'P4'}
               onChange={e => setCurrentGame({
@@ -73,6 +94,7 @@ const { currentGame, setCurrentGame, addGame } = useGameContext();
           <span className='mahjong-tile-name'>WEST</span>
           <input
             className='mahjong-tile-input'
+              maxLength={6}
             name="westNameInput"
             defaultValue={currentGame.players[2] || 'P3'}
             onChange={e => setCurrentGame({
@@ -88,6 +110,7 @@ const { currentGame, setCurrentGame, addGame } = useGameContext();
           <span className='mahjong-tile-name'>EAST</span>
           <input
             className='mahjong-tile-input'
+              maxLength={6}
             name="eastNameInput"
             defaultValue={currentGame.players[0] || 'P1'}
             onChange={e => setCurrentGame({
@@ -105,6 +128,7 @@ const { currentGame, setCurrentGame, addGame } = useGameContext();
             <span className='mahjong-tile-name'>NORTH</span>
             <input 
               className='mahjong-tile-input'
+              maxLength={6}
               name="northNameInput"
               defaultValue={currentGame.players[1] || 'P2'}
               onChange={e => setCurrentGame({

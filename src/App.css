@@ -387,6 +387,14 @@ select:hover {
   transform: translateY(0);
 }
 
+.primary-button:disabled {
+  background: #4a5568;
+  color: #718096;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .danger-button {
   font-family: 'm5x7', monospace;
   background: linear-gradient(135deg, #742628 0%, #5e0d0d 100%);
@@ -441,6 +449,37 @@ select:hover {
   border: 2px solid #ffffff;
   box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
   transform: scale(1.02);
+}
+
+/* Mahjong */
+.mahjong-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.score-positive { color: #68d391; }
+.score-negative { color: #fc8181; }
+.score-zero     { color: #888; }
+
+.rule-toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.step-label {
+  font-family: 'm5x7', monospace;
+  font-size: 20px;
+  color: #a0aec0;
+  margin-top: 8px;
 }
 
 @media (max-width: 590px) {

@@ -50,7 +50,7 @@ function Start() {
 
   return (
     <div className='container'>
-      <h1 className="title">Scorekeeper</h1>
+      <h1 className="title">SCOREKEEP</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <label>
           <input

@@ -36,10 +36,6 @@ const navigate = useNavigate();
             break;
             
           case gameTypes[2]: // Mahjong
-            // if (settings.startingPlayerScore !== undefined) mahjongSettings.setStartingPlayerScore(settings.startingPlayerScore);
-            // if (settings.limitValue !== undefined) mahjongSettings.setLimitValue(settings.limitValue);
-            // if (settings.baseWinScore !== undefined) mahjongSettings.setBaseWinScore(settings.baseWinScore);
-            // if (settings.reignOfTerror !== undefined) mahjongSettings.setReignOfTerror(settings.reignOfTerror);
             navigate('/mahjong-scoresheet');
             break;
         }
