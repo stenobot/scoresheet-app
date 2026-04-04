@@ -303,8 +303,8 @@ body {
 .setting-checkbox {
   width: 25px;
   height: 25px;
-  accent-color: #3182ce;
-  background-color: #3182ce;
+  accent-color: #4395A7;
+  background-color: #4395A7;
 }
 
 .setting-input {
@@ -323,11 +323,11 @@ body {
 
 .setting-input:focus {
   outline: none;
-  border-color: #63b3ed;
+  border-color: #6BB8C9;
 }
 
 .setting-input:hover {
-  border-color: #63b3ed;
+  border-color: #6BB8C9;
 }
 
 select {
@@ -345,16 +345,16 @@ select {
 
 select:focus {
     outline: none;
-    border-color: #63b3ed;
+    border-color: #6BB8C9;
 }
 
 select:hover {
-    border-color: #63b3ed;
+    border-color: #6BB8C9;
 }
 
 .link {
   font-family: 'm5x7', monospace;
-  color: #3182ce;
+  color: #4395A7;
   font-size: 30px;
   background: none;
   border: none;
@@ -367,7 +367,7 @@ select:hover {
 
 .primary-button {
   font-family: 'm5x7', monospace;
-  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+  background: linear-gradient(135deg, #58A8BA 0%, #4395A7 100%);
   color: white;
   border: none;
   border-radius: 8px;

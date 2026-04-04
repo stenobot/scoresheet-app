@@ -51,7 +51,10 @@ function Start() {
 
   return (
     <div className='container'>
-      <h1 className="title">SCOREKEEP <span style={{ fontSize: '14px', fontWeight: 'normal', opacity: 0.6 }}>v{version}</span></h1>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <img src="/images/logo-large.svg" alt="ScoreKeep" style={{ width: '200px' }} />
+        <span style={{ fontSize: '14px', opacity: 0.6, fontFamily: "'m5x7', monospace", marginBottom: '12px' }}>v{version}</span>
+      </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <label>
           <input
