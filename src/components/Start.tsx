@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PrimaryButton from './PrimaryButton';
 import { useGameContext, gameTypes, GameType, Game } from '../contexts/GameContext';
 import { generateId } from '../utils/Utils';
+import { version } from '../../package.json';
 
 function Start() {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ function Start() {
 
   return (
     <div className='container'>
-      <h1 className="title">SCOREKEEP</h1>
+      <h1 className="title">SCOREKEEP <span style={{ fontSize: '14px', fontWeight: 'normal', opacity: 0.6 }}>v{version}</span></h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <label>
           <input
