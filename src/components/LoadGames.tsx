@@ -37,6 +37,10 @@ const navigate = useNavigate();
           case GameType.Mahjong: // Mahjong
             navigate('/mahjong-scoresheet');
             break;
+
+          case GameType.Loony:
+            navigate('/loony-scoresheet');
+            break;
         }
       } catch (error) {
         console.error('Error parsing settings:', error);
@@ -59,6 +63,9 @@ const navigate = useNavigate();
         break;
       case GameType.Mahjong: // Mahjong
         navigate('mahjong-settings-players');
+        break;
+      case GameType.Loony:
+        navigate('loony-settings');
         break;
     }
   }

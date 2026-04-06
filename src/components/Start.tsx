@@ -42,6 +42,9 @@ function Start() {
       case GameType.Mahjong: // Mahjong
         navigate('/mahjong-settings-players');
         break;
+      case GameType.Loony:
+        navigate('/loony-settings');
+        break;
     }
   }
 

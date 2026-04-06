@@ -12,6 +12,8 @@ import LoadGames from './components/LoadGames';
 import BasicSettingsContextProvider from './contexts/BasicSettingsContext';
 import BasicSettings from './components/Basic/BasicSettings';
 import BasicScoresheet from './components/Basic/BasicScoresheet';
+import LoonySettings from './components/Loony/LoonySettings';
+import LoonyScoresheet from './components/Loony/LoonyScoresheet';
 
 function App() {
   return (
@@ -76,7 +78,21 @@ function App() {
               </BasicSettingsContextProvider>
             </GameContextProvider>
           } />
-        <Route path="/load-games" 
+        <Route
+          path="/loony-settings"
+          element={
+            <GameContextProvider>
+              <LoonySettings />
+            </GameContextProvider>
+          } />
+        <Route
+          path="/loony-scoresheet"
+          element={
+            <GameContextProvider>
+              <LoonyScoresheet />
+            </GameContextProvider>
+          } />
+        <Route path="/load-games"
           element={
             <GameContextProvider>
               <LoadGames />

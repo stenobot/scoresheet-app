@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 export enum GameType {
   ProgressiveRook = 'Progressive Rook',
   Mahjong = 'Mahjong',
+  Loony = 'Loony',
   Basic = 'Basic Scoresheet'
 };
 
