@@ -284,7 +284,17 @@ function LoonyScoresheet() {
             <tr>
               <td className="num-label-cell">#</td>
               {players.map((player, idx) => (
-                <td key={idx} className="normal-cell-header" style={{ textAlign: 'center' }}>
+                <td
+                  key={idx}
+                  className="normal-cell-header"
+                  style={{
+                    textAlign: 'center',
+                    ...(idx === dealerIndex ? {
+                      backgroundColor: '#313c4e',
+                      border: '2px solid #4395A7',
+                      borderBottom: 'none',
+                    } : {}),
+                  }}>
                   {player}
                   {idx === dealerIndex && (
                     <div style={{
@@ -301,7 +311,7 @@ function LoonyScoresheet() {
             </tr>
           </thead>
           <tbody>
-            {Array.from({ length: totalRounds }, (_, rIndex) => {
+            {Array.from({ length: currRound }, (_, rIndex) => {
               const rNum = rIndex + 1;
               const rCards = cardsDealtForRound(rNum, topRound);
               const isCurrent = rNum === currRound;
@@ -318,14 +328,18 @@ function LoonyScoresheet() {
                         className="normal-cell"
                         style={{
                           textAlign: 'center',
-                          color: isWinner && rIndex === totalRounds - 1 ? '#68d391' : color,
+                          color: isWinner && rNum === currRound ? '#68d391' : color,
                           cursor: clickable ? 'pointer' : 'default',
                           fontFamily: "'m5x7', monospace",
                           fontSize: '20px',
                           padding: '6px 8px',
-                          opacity: rNum > currRound ? 0.25 : 1,
                           userSelect: 'none',
                           WebkitUserSelect: 'none',
+                          ...(pIdx === dealerIndex ? {
+                            backgroundColor: '#313c4e',
+                            borderLeft: '2px solid #4395A7',
+                            borderRight: '2px solid #4395A7',
+                          } : {}),
                         }}
                         onClick={() => handleCellClick(pIdx, rIndex)}
                       >
@@ -339,7 +353,7 @@ function LoonyScoresheet() {
           </tbody>
           <tfoot>
             <tr>
-              <td className="num-label-cell">Σ</td>
+              <td className="num-label-cell"></td>
               {players.map((_, pIdx) => {
                 const isWinner = currentGame.isGameOver && players[pIdx] === currentGame.currLeader;
                 return (
@@ -352,6 +366,12 @@ function LoonyScoresheet() {
                       fontSize: '20px',
                       color: isWinner ? '#68d391' : undefined,
                       fontWeight: isWinner ? 'bold' : undefined,
+                      ...(pIdx === dealerIndex ? {
+                        backgroundColor: '#313c4e',
+                        borderLeft: '2px solid #4395A7',
+                        borderRight: '2px solid #4395A7',
+                        borderBottom: '2px solid #4395A7',
+                      } : {}),
                     }}>
                     {getFooterScore(pIdx)}
                   </td>
