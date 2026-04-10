@@ -14,6 +14,7 @@ import BasicSettings from './components/Basic/BasicSettings';
 import BasicScoresheet from './components/Basic/BasicScoresheet';
 import LoonySettings from './components/Loony/LoonySettings';
 import LoonyScoresheet from './components/Loony/LoonyScoresheet';
+import ProgRules from './components/ProgressiveRook/ProgRules';
 
 function App() {
   return (
@@ -92,6 +93,7 @@ function App() {
               <LoonyScoresheet />
             </GameContextProvider>
           } />
+        <Route path="/prog-rules" element={<ProgRules />} />
         <Route path="/load-games"
           element={
             <GameContextProvider>

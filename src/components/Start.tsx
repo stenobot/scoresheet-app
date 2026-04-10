@@ -94,6 +94,9 @@ function Start() {
         </label>
         <p style={{ margin: 0, fontSize: '18px', opacity: 0.7 }}>
           {gameDescriptions[newGame.gameType]}
+          {newGame.gameType === GameType.ProgressiveRook && (
+            <> <button className='link' style={{ fontSize: '18px', fontFamily: 'inherit' }} onClick={() => navigate('/prog-rules')}>See rules</button></>
+          )}
         </p>
       </div>
       <label>
