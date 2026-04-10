@@ -1,8 +1,9 @@
 @font-face {
   font-family: 'm5x7';
-  src: url('./fonts/m5x7.ttf') format('truetype');
+  src: url('/fonts/m5x7.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 .title {

@@ -17,22 +17,17 @@ export default defineConfig({
         orientation: 'any',
        icons: [
            {
-             src: 'bitsynth-icon-144x144.png',
-             sizes: '144x144',
-             type: 'image/png',
-           },
-           {
-             src: 'scorekeep-icon-192x192.png',
+             src: 'scorekeep-icon192x192.png',
              sizes: '192x192',
              type: 'image/png',
            },
            {
-             src: 'bitsynth-icon-256x256.png',
+             src: 'scorekeep-icon256x256.png',
              sizes: '256x256',
              type: 'image/png',
            },
            {
-             src: 'bitsynth-icon-384x384.png',
+             src: 'scorekeep-icon384x384.png',
              sizes: '384x384',
              type: 'image/png',
            },
@@ -40,12 +35,13 @@ export default defineConfig({
              src: 'scorekeep-icon-512x512.png',
              sizes: '512x512',
              type: 'image/png',
+             purpose: 'any',
            },
            {
              src: 'scorekeep-icon-512x512.png',
              sizes: '512x512',
              type: 'image/png',
-             purpose: 'any maskable', // Required for adaptive icons on Android
+             purpose: 'maskable',
            },
            {
              src: 'scorekeep-icon-1024x1024.png',

@@ -60,7 +60,7 @@ function Start() {
   }
 
   return (
-    <div className='container'>
+    <div className='container' style={{ maxWidth: '480px', margin: '0 auto' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <img src="/images/logo-large.svg" alt="ScoreKeep" style={{ width: '200px' }} />
         <span style={{ fontSize: '14px', opacity: 0.6, fontFamily: "'m5x7', monospace", marginBottom: '12px' }}>v{version}</span>
@@ -79,7 +79,7 @@ function Start() {
         <label>
           <select
             className='setting-dropdown'
-            style={{ fontSize: '40px', padding: '10px 4px', lineHeight: '1' }}
+            style={{ fontSize: '40px', padding: '10px 4px', lineHeight: '1', paddingLeft: '8px' }}
             value={newGame.gameType}
             onChange={e => setNewGame({
               ...newGame,
