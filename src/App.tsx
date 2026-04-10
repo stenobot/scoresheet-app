@@ -15,6 +15,8 @@ import BasicScoresheet from './components/Basic/BasicScoresheet';
 import LoonySettings from './components/Loony/LoonySettings';
 import LoonyScoresheet from './components/Loony/LoonyScoresheet';
 import ProgRules from './components/ProgressiveRook/ProgRules';
+import MahjongRules from './components/Mahjong/MahjongRules';
+import LoonyRules from './components/Loony/LoonyRules';
 
 function App() {
   return (
@@ -94,6 +96,8 @@ function App() {
             </GameContextProvider>
           } />
         <Route path="/prog-rules" element={<ProgRules />} />
+        <Route path="/mahjong-rules" element={<MahjongRules />} />
+        <Route path="/loony-rules" element={<LoonyRules />} />
         <Route path="/load-games"
           element={
             <GameContextProvider>

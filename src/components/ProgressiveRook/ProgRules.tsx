@@ -10,25 +10,19 @@ interface Section {
 const sections: Section[] = [
   {
     heading: 'Overview',
-    body: 'Progressive Rook is a trick-taking card game for 3–5 players using a 57-card Rook deck. It is played over 11 rounds. Each round has a meld requirement (sets and/or runs) that must be laid down before trick-taking. Players bid for the right to name trump, then try to capture point-value cards in tricks. The player with the highest cumulative score after all 11 rounds wins.',
+    body: 'Progressive Rook is a Rummy-style game for 3-5 players using a 57-card Rook deck. It is played over 15 rounds.',
   },
   {
-    heading: 'The Deck',
-    body: 'The Rook deck contains 57 cards: four suits (Black, Red, Green, Yellow) each numbered 1–14, plus the Rook Bird card. Only certain cards have point value:',
+    heading: 'Rules coming soon...',
+    body: 'Rules coming soon...',
     items: [
-      'Rook Bird — 20 points',
-      '1 (in each suit) — 15 points each',
-      '14 (in each suit) — 10 points each',
-      '10 (in each suit) — 10 points each',
-      '5 (in each suit) — 5 points each',
+      'Rules coming soon',
+      'Rules coming soon',
+      'Rules coming soon',
     ],
-  },
-  {
-    heading: 'The 11 Rounds',
-    body: 'Each round has a meld requirement. The dealer rotates clockwise each round.',
     table: {
-      col1: 'Round',
-      col2: 'Meld Requirement',
+      col1: 'Rules coming soon',
+      col2: 'Rules coming soon',
       rows: [
         ['1', '2 Sets'],
         ['2', '1 Run, 1 Set'],
@@ -43,61 +37,6 @@ const sections: Section[] = [
         ['11', '3 Runs, 1 Set'],
       ],
     },
-  },
-  {
-    heading: 'Sets and Runs',
-    items: [
-      'Set — 3 or more cards of the same number from different suits (e.g. three 7s).',
-      'Run — 4 or more consecutive cards of the same suit (e.g. Red 5, 6, 7, 8).',
-      'Melds are laid face-up on the table before trick-taking begins.',
-      'Cards used in melds cannot be played in tricks.',
-    ],
-  },
-  {
-    heading: 'The Nest',
-    body: 'Cards not dealt to players form the nest, a face-down kitty in the center. After bidding, the winning bidder picks up the nest, adds those cards to their hand, then discards the same number of cards face-down. Discarded point-value cards count for the non-bidding players at the end of the round. The Rook Bird cannot be discarded into the nest.',
-  },
-  {
-    heading: 'Bidding',
-    items: [
-      'Bidding starts with the player to the left of the dealer and goes clockwise.',
-      'Each player bids or passes. A player who passes may not bid again that round.',
-      'Bids must be multiples of 5 and higher than the previous bid.',
-      'The minimum bid is 70.',
-      'The highest bidder wins the right to pick up the nest and name trump.',
-    ],
-  },
-  {
-    heading: 'Trump',
-    body: 'After picking up the nest, the winning bidder names one of the four suits as trump. The Rook Bird always belongs to trump and is the highest trump card, ranking above the 1.',
-    items: [
-      'Trump rank (high to low): Rook Bird → 1 → 14 → 13 → 12 → 11 → 10 → 9 → 8 → 7 → 6 → 5 → 4 → 3 → 2',
-    ],
-  },
-  {
-    heading: 'Trick-Taking',
-    items: [
-      'The winning bidder leads the first trick.',
-      'Players must follow the led suit if able.',
-      'If unable to follow suit, any card (including trump) may be played.',
-      'The highest trump wins the trick if any trump was played; otherwise the highest card of the led suit wins.',
-      'The trick winner leads the next trick.',
-      'If the Rook Bird is led, all players must play their lowest card of any suit, and the Rook Bird wins the trick.',
-    ],
-  },
-  {
-    heading: 'Scoring',
-    items: [
-      'If the bidder captures at least as many points as their bid, they score the actual points captured.',
-      'If the bidder falls short of their bid, they are "set" — they lose their bid amount from their score.',
-      'Non-bidding players always score their actual points captured regardless of the bid outcome.',
-      'The nest\'s remaining cards (after the bidder\'s discards) count for the non-bidding players.',
-      'Double-12 Rule: if a player\'s running total reaches exactly 120, their score is doubled to 240.',
-    ],
-  },
-  {
-    heading: 'Winning',
-    body: 'The player with the highest cumulative score after all 11 rounds wins.',
   },
 ];
 
