@@ -7,7 +7,7 @@ import { version } from '../../package.json';
 
 function Start() {
   const navigate = useNavigate();
-  const { addGame, games } = useGameContext();
+  const { setCurrentGame, games } = useGameContext();
 
   const [newGame, setNewGame] = useState<Game>({
     id: generateId(),
@@ -37,7 +37,7 @@ function Start() {
   const isGameLoadData = games && games.length > 0;
 
   const handleNewClick = () => {
-    addGame(newGame);
+    setCurrentGame(newGame);
 
     switch (newGame.gameType) {
       case GameType.Basic: // Basic Scoresheet

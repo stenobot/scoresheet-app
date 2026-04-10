@@ -99,9 +99,10 @@ export const GameContextProvider = ({ children }: PropsWithChildren<{}>) => {
   };
 
   const updateGame = (updatedGame: Game) => {
-    const updatedGames = games.map(game => 
-      game.id === updatedGame.id ? updatedGame : game
-    );
+    const isExisting = games.some(game => game.id === updatedGame.id);
+    const updatedGames = isExisting
+      ? games.map(game => game.id === updatedGame.id ? updatedGame : game)
+      : [...games, updatedGame];
     setGames(updatedGames);
     setCurrentGame(updatedGame);
     saveGameToLocalStorage(updatedGame, updatedGames);
@@ -118,9 +119,11 @@ export const GameContextProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const location = useLocation();
 
-  // Update localStorage whenever current game changes
+  // Update localStorage whenever current game changes (only if already committed)
   useEffect(() => {
     setGames(prev => {
+      const isExisting = prev.some(game => game.id === currentGame.id);
+      if (!isExisting) return prev;
       const updatedGames = prev.map(game =>
         game.id === currentGame.id ? currentGame : game
       );
