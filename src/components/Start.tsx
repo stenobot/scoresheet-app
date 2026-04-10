@@ -92,7 +92,7 @@ function Start() {
               ))}
           </select>
         </label>
-        <p style={{ margin: 0, fontSize: '16px', opacity: 0.7 }}>
+        <p style={{ margin: 0, fontSize: '18px', opacity: 0.7 }}>
           {gameDescriptions[newGame.gameType]}
         </p>
       </div>

@@ -8,29 +8,52 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
+        name: 'ScoreKeep',
         short_name: 'ScoreKeep',
-        name: 'ScoreKeep - Game Scoresheet',
-        icons: [
-          {
-            src: 'favicon.ico',
-            sizes: '64x64 32x32 24x24 16x16',
-            type: 'image/x-icon',
-          },
-          {
-            src: 'logo192.png',
-            type: 'image/png',
-            sizes: '192x192',
-          },
-          {
-            src: 'logo512.png',
-            type: 'image/png',
-            sizes: '512x512',
-          },
+        description: 'Create a scoresheet and save it to your device',
+        theme_color: '#4395a7',
+        background_color: '#1a1a1a',
+        display: 'standalone',
+        orientation: 'any',
+       icons: [
+           {
+             src: 'bitsynth-icon-144x144.png',
+             sizes: '144x144',
+             type: 'image/png',
+           },
+           {
+             src: 'scorekeep-icon-192x192.png',
+             sizes: '192x192',
+             type: 'image/png',
+           },
+           {
+             src: 'bitsynth-icon-256x256.png',
+             sizes: '256x256',
+             type: 'image/png',
+           },
+           {
+             src: 'bitsynth-icon-384x384.png',
+             sizes: '384x384',
+             type: 'image/png',
+           },
+           {
+             src: 'scorekeep-icon-512x512.png',
+             sizes: '512x512',
+             type: 'image/png',
+           },
+           {
+             src: 'scorekeep-icon-512x512.png',
+             sizes: '512x512',
+             type: 'image/png',
+             purpose: 'any maskable', // Required for adaptive icons on Android
+           },
+           {
+             src: 'scorekeep-icon-1024x1024.png',
+             sizes: '1024x1024',
+             type: 'image/png',
+           },
         ],
         start_url: '/',
-        display: 'standalone',
-        theme_color: '#000000',
-        background_color: '#ffffff',
       },
     }),
   ],
