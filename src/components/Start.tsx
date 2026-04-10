@@ -28,10 +28,10 @@ function Start() {
   });
 
   const gameDescriptions: Record<GameType, string> = {
-    [GameType.ProgressiveRook]: 'Create a scoresheet for Progressive Rook, a trick-taking game played with Rook cards where the number of cards dealt increases each round.',
-    [GameType.Mahjong]: 'Create a scoresheet for Mahjong, the classic 4-player tile game with many rule variations.',
-    [GameType.Loony]: 'Create a scoresheet for Loony, a trick-taking game where players must bid how many tricks they will take each round, then use their same bids on the way back down. Similar to Up and Down the River aka Oh Hell, but played with Rook cards rather than a standard 52-card deck.',
-    [GameType.Basic]: 'Create a basic scoresheet.',
+    [GameType.ProgressiveRook]: 'Progressive Rook is a trick-taking game played with a 57-card Rook deck where the number of cards dealt increases each round.',
+    [GameType.Mahjong]: 'Mahjong is a classic 4-player tile game with many rule variations.',
+    [GameType.Loony]: 'Loony is a trick-taking game where players must bid how many tricks they will take each round, then use their same bids on the way back down. Similar to Up and Down the River aka Oh Hell, but played with a 57-card Rook deck rather than a standard 52-card deck.',
+    [GameType.Basic]: 'A generic template that should work for most simple games.',
   };
 
   const isGameLoadData = games && games.length > 0;
