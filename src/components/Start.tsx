@@ -95,13 +95,13 @@ function Start() {
         <p style={{ margin: 0, fontSize: '18px', opacity: 0.7 }}>
           {gameDescriptions[newGame.gameType]}
           {newGame.gameType === GameType.ProgressiveRook && (
-            <> <button className='link' style={{ fontSize: '18px', fontFamily: 'inherit' }} onClick={() => navigate('/prog-rules')}>See rules</button></>
+            <> <button className='link' style={{ fontSize: '18px', fontFamily: 'inherit', fontWeight: 'bold' }} onClick={() => navigate('/prog-rules')}>See rules</button></>
           )}
           {newGame.gameType === GameType.Mahjong && (
-            <> <button className='link' style={{ fontSize: '18px', fontFamily: 'inherit' }} onClick={() => navigate('/mahjong-rules')}>See rules</button></>
+            <> <button className='link' style={{ fontSize: '18px', fontFamily: 'inherit', fontWeight: 'bold' }} onClick={() => navigate('/mahjong-rules')}>See rules</button></>
           )}
           {newGame.gameType === GameType.Loony && (
-            <> <button className='link' style={{ fontSize: '18px', fontFamily: 'inherit' }} onClick={() => navigate('/loony-rules')}>See rules</button></>
+            <> <button className='link' style={{ fontSize: '18px', fontFamily: 'inherit', fontWeight: 'bold' }} onClick={() => navigate('/loony-rules')}>See rules</button></>
           )}
         </p>
       </div>
