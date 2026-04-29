@@ -14,7 +14,7 @@ const sections: Section[] = [
   },
   {
     heading: 'Setup',
-    body: 'The game uses the entire 57-card Rook deck, including 2 Rook (wild) cards, and is played over 11 rounds. Choose a starting dealer. Each round, the dealer distributes a specific number of cards to each player starting with 6 cards for round 1. That number goes up by 1 each subsequent round. The dealer places the remaining cards face down into a general draw pile, and flips the top card over to create a separate discard pile. Play begins with the player to the left of the dealer. When a round is over, the dealer role rotates to the left, and the next round begins with a new deal. The player to the left of the dealer starts each round.',
+    body: 'The game uses the entire 57-card Rook deck, including 2 Rook (wild) cards, and is played over 11 rounds. Choose a starting dealer. Each round, the dealer distributes a specific number of cards to each player starting with 6 cards for round 1. The number of cards dealt goes up by 1 each round. The dealer places the remaining cards face down into a general draw pile, and flips the top card over to start a separate face-up discard pile. Play begins with the player to the left of the dealer. When a round is over, the dealer role rotates to the left, and the next round begins with a new deal.',
   },
   {
     heading: 'Round Play',
