@@ -10,11 +10,7 @@ interface Section {
 const sections: Section[] = [
   {
     heading: 'Overview',
-    body: 'Progressive Rook is a Rummy-style game for 3-5 players using Rook cards rather than standard playing cards. It is played over 11 rounds.',
-  },
-  {
-    heading: 'Setup',
-    body: 'The game uses two complete 57-card Rook decks, totalling 114 cards. This total includes 4 Rook (wild) cards. The game is played over 11 rounds. Choose a starting dealer. Each round, the dealer distributes a specific number of cards to each player starting with 6 cards for round 1. The number of cards dealt goes up by 1 each round. The dealer places the remaining cards face down into a general draw pile, and flips the top card over to start a separate face-up discard pile. Play begins with the player to the left of the dealer. When a round is over, the dealer role rotates to the left, and the next round begins with a new deal.',
+    body: 'Progressive Rook uses two complete 57-card Rook decks, totalling 114 cards. This total includes 4 Rook (wild) cards. The game is played over 11 rounds. Choose a starting dealer. Each round, the dealer distributes a specific number of cards to each player starting with 6 cards for round 1. The number of cards dealt goes up by 1 each round. The dealer places the remaining cards face down into a general draw pile, and flips the top card over to start a separate face-up discard pile. Play begins with the player to the left of the dealer. When a round is over, the dealer role rotates to the left, and the next round begins with a new deal.',
     table: {
       col1: 'Round',
       col2: 'Cards Dealt',
