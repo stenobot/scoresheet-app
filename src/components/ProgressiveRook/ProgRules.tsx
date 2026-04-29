@@ -10,21 +10,11 @@ interface Section {
 const sections: Section[] = [
   {
     heading: 'Overview',
-    body: 'Progressive Rook is a Rummy-style game for 3-5 players using a 57-card Rook deck. It is played over 11 rounds.',
+    body: 'Progressive Rook is a Rummy-style game for 3-5 players using Rook cards rather than standard playing cards. It is played over 11 rounds.',
   },
   {
     heading: 'Setup',
-    body: 'The game uses the entire 57-card Rook deck, including 2 Rook (wild) cards, and is played over 11 rounds. Choose a starting dealer. Each round, the dealer distributes a specific number of cards to each player starting with 6 cards for round 1. The number of cards dealt goes up by 1 each round. The dealer places the remaining cards face down into a general draw pile, and flips the top card over to start a separate face-up discard pile. Play begins with the player to the left of the dealer. When a round is over, the dealer role rotates to the left, and the next round begins with a new deal.',
-  },
-  {
-    heading: 'Round Play',
-    body: 'On each player\'s turn, they must draw a card, and they must discard a card. Here are the details:',
-    items: [
-      'First, they must draw a card from the top of either the face-down Draw pile or the face-up Discard pile. If the Discard pile is empty, they must use the Draw pile.',
-      'If they have met the Round Goal (see table below), they can optionally lay down the eligible sets/runs in front of them face up. They can only "lay down" once per round, and it must be the same amount of sets/runs as specified in the Round Goal. For example, if they are on Round 2, they can lay down a total of 1 Run and 1 Set. They cannot lay down 2 sets, even if they have 2 complete sets in their hand.',
-      'If they have already laid down their sets/runs, they can optionally place other cards from their hand on their own sets/runs or their opponents\'s sets/runs. For example, if they draw a card that plays at the beginning or end of an opponent\s run, they can keep it concealed in their hand and play it during their turn after they have laid down. When playing a card on a laid down set or run, it must be a legal play for that set or run. (See Sets and Runs details below.) If a laid down set or run contains a Rook card, and the player has the card that the Rook is substituted for, they can swap it with the Rook and then immediately play the Rook somewhere else. They cannot play on another player\'s sets/runs until they have laid down their own sets/runs.',
-      'Lastly, they must discard a card from the remaining cards in their hand (if they have any). They can discard any card, including the one they just drew.',
-    ],
+    body: 'The game uses two complete 57-card Rook decks, totalling 114 cards. This total includes 4 Rook (wild) cards. The game is played over 11 rounds. Choose a starting dealer. Each round, the dealer distributes a specific number of cards to each player starting with 6 cards for round 1. The number of cards dealt goes up by 1 each round. The dealer places the remaining cards face down into a general draw pile, and flips the top card over to start a separate face-up discard pile. Play begins with the player to the left of the dealer. When a round is over, the dealer role rotates to the left, and the next round begins with a new deal.',
     table: {
       col1: 'Round',
       col2: 'Cards Dealt',
@@ -43,6 +33,16 @@ const sections: Section[] = [
         ['11', '16', '3 Runs, 1 Set'],
       ],
     },
+  },
+  {
+    heading: 'Round Play',
+    body: 'On each player\'s turn, they must draw a card, and they must discard a card. Here are the details:',
+    items: [
+      'First, they must draw a card from the top of either the face-down Draw pile or the face-up Discard pile. If the Discard pile is empty, they must use the Draw pile.',
+      'If they have met the Round Goal (see table below), they can optionally lay down the eligible sets/runs in front of them face up. They can only "lay down" once per round, and it must be the same amount of sets/runs as specified in the Round Goal. For example, if they are on Round 2, they can lay down a total of 1 Run and 1 Set. They cannot lay down 2 sets, even if they have 2 complete sets in their hand.',
+      'If they have already laid down their sets/runs, they can optionally place other cards from their hand on their own sets/runs or their opponents\'s sets/runs. For example, if they draw a card that plays at the beginning or end of an opponent\s run, they can keep it concealed in their hand and play it during their turn after they have laid down. When playing a card on a laid down set or run, it must be a legal play for that set or run. (See Sets and Runs details below.) If a laid down set or run contains a Rook card, and the player has the card that the Rook is substituted for, they can swap it with the Rook and then immediately play the Rook somewhere else. They cannot play on another player\'s sets/runs until they have laid down their own sets/runs.',
+      'Lastly, they must discard a card from the remaining cards in their hand (if they have any). They can discard any card, including the one they just drew.',
+    ],
   },
   {
     heading: 'Stealing from the discard pile',
