@@ -370,6 +370,8 @@ function BasicScoresheet() {
         return 'normal-cell-header-3';
       case 5:
         return 'normal-cell-header-5';
+      case 6:
+        return 'normal-cell-header-6';
       default:
         return 'normal-cell-header';
     }

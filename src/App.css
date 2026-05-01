@@ -108,7 +108,15 @@ td:before {
   width: 3.4em;
 }
 
-.normal-cell-header, .normal-cell-header-3, .normal-cell-header-5 {
+.normal-cell-header-6:before {
+  padding-left: 11px;
+  padding-right: 11px;
+  content: '';
+  display: block;
+  width: 3.2em;
+}
+
+.normal-cell-header, .normal-cell-header-3, .normal-cell-header-5, .normal-cell-header-6 {
   font-family: 'm5x7', monospace;
   font-size: 24px;
   height: 1.8em;
@@ -512,6 +520,12 @@ select:hover {
     display: block;
     width: 2.8em;
   }
+
+  .normal-cell-header-6:before {
+    padding-left: 9px;
+    padding-right: 9px;
+    width: 2.7em;
+  }
 }
 
 @media (max-width:500px) {
@@ -537,6 +551,12 @@ select:hover {
     content: '';
     display: block;
     width: 2.4em;
+  }
+
+  .normal-cell-header-6:before {
+    padding-left: 7px;
+    padding-right: 7px;
+    width: 2.3em;
   }
 
     body {
@@ -617,6 +637,12 @@ select:hover {
     display: block;
     width: 2.2em;
   }
+
+  .normal-cell-header-6:before {
+    padding-left: 6px;
+    padding-right: 6px;
+    width: 2.1em;
+  }
 }
 
 @media (max-width:460px) {
@@ -642,6 +668,12 @@ select:hover {
     content: '';
     display: block;
     width: 1.9em;
+  }
+
+  .normal-cell-header-6:before {
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 2em;
   }
 }
 
@@ -669,6 +701,12 @@ select:hover {
     display: block;
     width: 1.7em;
   }
+
+  .normal-cell-header-6:before {
+    padding-left: 4px;
+    padding-right: 4px;
+    width: 1.9em;
+  }
 }
 
 @media (max-width:420px) {
@@ -694,5 +732,11 @@ select:hover {
     content: '';
     display: block;
     width: 1.6em;
+  }
+
+  .normal-cell-header-6:before {
+    padding-left: 3px;
+    padding-right: 3px;
+    width: 1.8em;
   }
 }
